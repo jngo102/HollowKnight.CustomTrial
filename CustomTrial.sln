@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomTrial", "CustomTrial\CustomTrial.csproj", "{0AE155CB-E495-44B7-8414-39119E1D5FBB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0AE155CB-E495-44B7-8414-39119E1D5FBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AE155CB-E495-44B7-8414-39119E1D5FBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AE155CB-E495-44B7-8414-39119E1D5FBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AE155CB-E495-44B7-8414-39119E1D5FBB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

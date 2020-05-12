@@ -1,0 +1,125 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using CustomTrial.Classes;
+using CustomTrial.Utilities;
+using HutongGames.PlayMaker.Actions;
+using ModCommon;
+using UnityEngine;
+
+namespace CustomTrial
+{
+    public class ColosseumManager : MonoBehaviour
+    {
+        private List<Wave> _waves = new List<Wave>();
+        
+        private PlayMakerFSM _battleCtrl;
+        private PlayMakerFSM _manager;
+        
+        private void Awake()
+        {
+            _battleCtrl = gameObject.LocateMyFSM("Battle Control");
+            _manager = gameObject.LocateMyFSM("Manager");
+        }
+
+        private IEnumerator Start()
+        {
+            Destroy(_battleCtrl);
+            Destroy(gameObject.FindGameObjectInChildren("Waves"));
+
+            foreach (GameObject go in FindObjectsOfType<GameObject>())
+            {
+                if (go.layer == 11)
+                {
+                    Destroy(go);
+                }
+            }
+
+            yield return new WaitWhile(() => _manager.ActiveStateName != "Waves Start");
+            
+            Wave wave1 = new Wave(false, 2.0f);
+            wave1.AddEnemy(CustomTrial.GameObjects["Flukemarm"], new Vector2(100f, 10f)); 
+            wave1.AddEnemy(CustomTrial.GameObjects["Grey Prince Zote"], new Vector2(95f, 10f));
+            wave1.AddEnemy(CustomTrial.GameObjects["Failed Champion"], new Vector2(105f, 12f));
+            wave1.AddEnemy(CustomTrial.GameObjects["Winged Nosk"], new Vector2(105f, 12f));
+            wave1.AddEnemy(CustomTrial.GameObjects["Fungoon"], new Vector2(105f, 12f));
+            wave1.AddEnemy(CustomTrial.GameObjects["Fungified Husk"], new Vector2(105f, 12f));
+            wave1.AddEnemy(CustomTrial.GameObjects["Sporg"], new Vector2(105f, 12f));
+            wave1.AddEnemy(CustomTrial.GameObjects["Ambloom"], new Vector2(105f, 12f));
+            
+            _waves.Add(wave1);
+
+            Wave wave2 = new Wave(false, 3.0f);
+            wave2.AddEnemy(CustomTrial.GameObjects["Shrumeling"], new Vector2(90, 7));
+            wave2.AddEnemy(CustomTrial.GameObjects["Spiny Husk"], new Vector2(100, 7));
+            wave2.AddEnemy(CustomTrial.GameObjects["Shrumal Ogre"], new Vector2(110, 10));
+
+            _waves.Add(wave2);
+
+            Wave wave3 = new Wave(false, 1.0f);
+            wave3.AddEnemy(CustomTrial.GameObjects["Nightmare King Grimm"], new Vector2(90, 8));
+            wave3.AddEnemy(CustomTrial.GameObjects["Pure Vessel"], new Vector2(90, 8));
+            wave3.AddEnemy(CustomTrial.GameObjects["Absolute Radiance"], new Vector2(90, 10));
+            
+            _waves.Add(wave3);
+            
+            StartCoroutine(StartWaves());
+        }
+
+        public static int EnemyCount;
+        private IEnumerator StartWaves()
+        {    
+            Log("Start Waves");
+            foreach (Wave wave in _waves)
+            {
+                EnemyCount = 0;
+                
+                PlayMakerFSM spawn = null;
+
+                yield return new WaitForSeconds(wave.Cooldown);
+                
+                foreach (KeyValuePair<GameObject, Vector2> pair in wave.Enemies)
+                {
+                    GameObject enemyObj = pair.Key;
+                    Vector2 spawnPoint = pair.Value;
+                    
+                    GameObject largeCage = Instantiate(CustomTrial.GameObjects["Large Cage"], new Vector2(spawnPoint.x, spawnPoint.y), Quaternion.identity);
+                    largeCage.SetActive(true);
+                    spawn = largeCage.LocateMyFSM("Spawn");
+
+                    spawn.RemoveAction<ActivateGameObject>("Spawn");
+                    spawn.InsertMethod("Spawn", 1, () => SpawnEnemy(enemyObj, spawnPoint));
+                    spawn.SetState("Init");
+                    spawn.SendEvent("SPAWN");
+
+                    EnemyCount++;
+                }
+                
+                yield return new WaitWhile(() =>
+                {
+                    return spawn.ActiveStateName != "End";
+                });
+
+                yield return new WaitWhile(() => EnemyCount > 0);
+            }
+
+            Log("Battle Over!");
+            
+            yield return null;
+        }
+        
+        private void SpawnEnemy(GameObject enemyObj, Vector2 spawnPoint)
+        {
+            GameObject enemy = Instantiate(enemyObj, spawnPoint, Quaternion.identity);
+            enemy.SetActive(true);
+
+            enemy.AddComponent<EnemyTracker>();
+
+            var hm = enemy.GetComponent<HealthManager>();
+            hm.SetGeoSmall(0);
+            hm.SetGeoMedium(0);
+            hm.SetGeoLarge(0);
+        }
+
+        private void Log(object message) => Modding.Logger.Log("[Colosseum Manager] " + message);
+    }
+}
