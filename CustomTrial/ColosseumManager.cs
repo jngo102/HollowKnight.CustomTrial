@@ -36,31 +36,32 @@ namespace CustomTrial
 
             yield return new WaitWhile(() => _manager.ActiveStateName != "Waves Start");
             
-            Wave wave1 = new Wave(false, 2.0f);
-            wave1.AddEnemy(CustomTrial.GameObjects["Flukemarm"], new Vector2(100f, 10f)); 
-            wave1.AddEnemy(CustomTrial.GameObjects["Grey Prince Zote"], new Vector2(95f, 10f));
-            wave1.AddEnemy(CustomTrial.GameObjects["Failed Champion"], new Vector2(105f, 12f));
-            wave1.AddEnemy(CustomTrial.GameObjects["Winged Nosk"], new Vector2(105f, 12f));
+            //Wave wave1 = new Wave(false, 2.0f);
+            
+            /*wave1.AddEnemy(CustomTrial.GameObjects["Volatile Gruzzer"], new Vector2(100f, 10f));
+            wave1.AddEnemy(CustomTrial.GameObjects["Husk Dandy"], new Vector2(95f, 10f));
+            wave1.AddEnemy(CustomTrial.GameObjects["Dirtcarver"], new Vector2(105f, 12f));
+            wave1.AddEnemy(CustomTrial.GameObjects["Vengefly"], new Vector2(105f, 12f));
             wave1.AddEnemy(CustomTrial.GameObjects["Fungoon"], new Vector2(105f, 12f));
-            wave1.AddEnemy(CustomTrial.GameObjects["Fungified Husk"], new Vector2(105f, 12f));
-            wave1.AddEnemy(CustomTrial.GameObjects["Sporg"], new Vector2(105f, 12f));
-            wave1.AddEnemy(CustomTrial.GameObjects["Ambloom"], new Vector2(105f, 12f));
+            wave1.AddEnemy(CustomTrial.GameObjects["Fungified Husk A"], new Vector2(105f, 12f));*/
+            //wave1.AddEnemy(CustomTrial.GameObjects["Menderbug"], new Vector2(105f, 12f));
+            //wave1.AddEnemy(CustomTrial.GameObjects["Flukemunga"], new Vector2(105f, 8f));
             
-            _waves.Add(wave1);
+            //_waves.Add(wave1);
 
-            Wave wave2 = new Wave(false, 3.0f);
-            wave2.AddEnemy(CustomTrial.GameObjects["Shrumeling"], new Vector2(90, 7));
-            wave2.AddEnemy(CustomTrial.GameObjects["Spiny Husk"], new Vector2(100, 7));
-            wave2.AddEnemy(CustomTrial.GameObjects["Shrumal Ogre"], new Vector2(110, 10));
+            /*Wave wave2 = new Wave(false, 3.0f);
+            wave2.AddEnemy(CustomTrial.GameObjects["Gorgeous Husk"], new Vector2(90, 7));
+            wave2.AddEnemy(CustomTrial.GameObjects["Aspid Mother"], new Vector2(100, 7));
+            wave2.AddEnemy(CustomTrial.GameObjects["Elder Baldur"], new Vector2(110, 10));
 
-            _waves.Add(wave2);
+            _waves.Add(wave2);*/
 
-            Wave wave3 = new Wave(false, 1.0f);
-            wave3.AddEnemy(CustomTrial.GameObjects["Nightmare King Grimm"], new Vector2(90, 8));
-            wave3.AddEnemy(CustomTrial.GameObjects["Pure Vessel"], new Vector2(90, 8));
-            wave3.AddEnemy(CustomTrial.GameObjects["Absolute Radiance"], new Vector2(90, 10));
+            //Wave wave3 = new Wave(false, 1.0f);
+            //wave3.AddEnemy(CustomTrial.GameObjects["Nightmare King Grimm"], new Vector2(90, 8));
+            //wave3.AddEnemy(CustomTrial.GameObjects["Pure Vessel"], new Vector2(90, 8));
+            //wave3.AddEnemy(CustomTrial.GameObjects["Absolute Radiance"], new Vector2(90, 10));
             
-            _waves.Add(wave3);
+            //_waves.Add(wave3);
             
             StartCoroutine(StartWaves());
         }
@@ -69,7 +70,7 @@ namespace CustomTrial
         private IEnumerator StartWaves()
         {    
             Log("Start Waves");
-            foreach (Wave wave in _waves)
+            foreach (Wave wave in CustomTrial.battleControl.Waves)
             {
                 EnemyCount = 0;
                 
@@ -77,17 +78,17 @@ namespace CustomTrial
 
                 yield return new WaitForSeconds(wave.Cooldown);
                 
-                foreach (KeyValuePair<GameObject, Vector2> pair in wave.Enemies)
+                for (int i = 0; i < wave.Enemies.Count; i++)
                 {
-                    GameObject enemyObj = pair.Key;
-                    Vector2 spawnPoint = pair.Value;
+                    string enemyName = wave.Enemies[i];
+                    Vector2 enemySpawn = wave.EnemySpawn[i];
                     
-                    GameObject largeCage = Instantiate(CustomTrial.GameObjects["Large Cage"], new Vector2(spawnPoint.x, spawnPoint.y), Quaternion.identity);
+                    GameObject largeCage = Instantiate(CustomTrial.GameObjects["Large Cage"], enemySpawn, Quaternion.identity);
                     largeCage.SetActive(true);
                     spawn = largeCage.LocateMyFSM("Spawn");
 
                     spawn.RemoveAction<ActivateGameObject>("Spawn");
-                    spawn.InsertMethod("Spawn", 1, () => SpawnEnemy(enemyObj, spawnPoint));
+                    spawn.InsertMethod("Spawn", 1, () => SpawnEnemy(enemyName, enemySpawn));
                     spawn.SetState("Init");
                     spawn.SendEvent("SPAWN");
 
@@ -107,9 +108,9 @@ namespace CustomTrial
             yield return null;
         }
         
-        private void SpawnEnemy(GameObject enemyObj, Vector2 spawnPoint)
+        private void SpawnEnemy(string enemyName, Vector2 spawnPoint)
         {
-            GameObject enemy = Instantiate(enemyObj, spawnPoint, Quaternion.identity);
+            GameObject enemy = Instantiate(CustomTrial.GameObjects[enemyName], spawnPoint, Quaternion.identity);
             enemy.SetActive(true);
 
             enemy.AddComponent<EnemyTracker>();

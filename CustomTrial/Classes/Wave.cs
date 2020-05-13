@@ -1,29 +1,70 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CustomTrial.Classes
 {
-    public class Wave
+    [Serializable]
+    public class BattleControl
     {
-        // Enemies and their spawn locations
-        public Dictionary<GameObject, Vector2> Enemies = new Dictionary<GameObject, Vector2>();
-        // Platforms and their spawn locations
-        public Dictionary<GameObject, Vector2> Platforms = new Dictionary<GameObject, Vector2>();
-        // Whether spikes should cover the bottom of the arena
-        public bool Spikes;
-        public float Cooldown;
+        public List<Wave> Waves;
 
-        public static Wave Instance;
-        
-        public Wave(bool spikes, float cooldown)
+        public BattleControl()
         {
-            Spikes = spikes;
-            Cooldown = cooldown;
+            Waves = new List<Wave>();
         }
 
-        public void AddEnemy(GameObject enemy, Vector2 spawnPoint)
+        public BattleControl(List<Wave> waves)
         {
-            Enemies.Add(enemy, spawnPoint);
+            Waves = new List<Wave>();
+            foreach (Wave wave in waves)
+            {
+                Waves.Add(wave);
+            }
+        }
+    }
+    
+    [Serializable]
+    public class Wave
+    {
+        public List<string> Enemies;
+        public List<Vector2> EnemySpawn;
+        public bool Spikes;
+        public List<Vector2> PlatformSpawn;
+        public float Cooldown;
+
+        public Wave()
+        {
+            Enemies = new List<string>();
+            EnemySpawn = new List<Vector2>();
+            Spikes = false;
+            PlatformSpawn = new List<Vector2>();
+            Cooldown = 0.0f;
+        }
+        
+        public Wave(List<string> enemies, List<Vector2> enemySpawn, bool spikes, List<Vector2> platSpawn, float cooldown)
+        {
+            Enemies = new List<string>();
+            foreach (string enemyName in enemies)
+            {
+                Enemies.Add(enemyName);
+            }
+            
+            EnemySpawn = new List<Vector2>();
+            foreach (Vector2 spawnPos in enemySpawn)
+            {
+                EnemySpawn.Add(spawnPos);
+            }
+            
+            Spikes = spikes;
+            
+            PlatformSpawn = new List<Vector2>();
+            foreach (Vector2 platPos in platSpawn)
+            {
+                PlatformSpawn.Add(platPos);
+            }
+            
+            Cooldown = cooldown;
         }
     }
 }
