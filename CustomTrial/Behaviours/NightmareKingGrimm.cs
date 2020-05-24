@@ -31,7 +31,7 @@ namespace CustomTrial.Behaviours
             _control.Fsm.GetFsmFloat("Max X").Value = ArenaInfo.RightX;
             _control.Fsm.GetFsmFloat("Ground Y").Value = GroundY;
             _control.Fsm.GetFsmFloat("Mid Y").Value = 13.0f;
-            _control.GetAction<SetPosition>("Balloon Pos").x = (ArenaInfo.RightX - ArenaInfo.LeftX) / 2.0f;
+            _control.GetAction<SetPosition>("Balloon Pos").x = ArenaInfo.CenterX;
             
             _control.SendEvent("TELE OUT");
         }

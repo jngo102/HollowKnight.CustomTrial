@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class BrokenVessel : MonoBehaviour
+    public class LostKin : MonoBehaviour
     {
         private PlayMakerFSM _control;
 
@@ -22,22 +22,20 @@ namespace CustomTrial.Behaviours
             _control.Fsm.GetFsmFloat("Left X").Value = ArenaInfo.LeftX;
             _control.Fsm.GetFsmFloat("Min Dstab Height").Value = ArenaInfo.BottomY + 5;
             _control.Fsm.GetFsmFloat("Right X").Value = ArenaInfo.RightX;
-
-            _control.GetAction<RandomFloat>("Aim Jump 2").min.Value = ArenaInfo.CenterX - 1;
-            _control.GetAction<RandomFloat>("Aim Jump 2").max.Value = ArenaInfo.CenterX + 1;
-            _control.GetAction<SetPosition>("Set Pos").x = transform.position.x;
-            _control.GetAction<SetPosition>("Set Pos").x = transform.position.y;
-
-            yield return new WaitWhile(() => _control.ActiveStateName != "Intro Fall" && _control.ActiveStateName != "Waiting");
-
-            GetComponent<MeshRenderer>().enabled = true;
             
+            _control.GetAction<SetPosition>("Intro Fall").x.Value = transform.position.x;
+            _control.GetAction<SetPosition>("Intro Fall").y.Value = transform.position.y;
+            _control.GetAction<SetPosition>("Set X", 0).x.Value = transform.position.x;
+            _control.GetAction<SetPosition>("Set X", 2).x.Value = transform.position.x;
+
+            yield return new WaitWhile(() => _control.ActiveStateName != "Intro Fall");
+
             _control.SetState("Roar End");
         }
 
         private void Update()
         {
-            Modding.Logger.Log("IK Control State: " + _control.ActiveStateName + " " + transform.position);
+            Modding.Logger.Log("[Lost Kin X] " + transform.position.x);
         }
     }
 }

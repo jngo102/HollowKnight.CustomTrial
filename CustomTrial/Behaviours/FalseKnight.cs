@@ -16,7 +16,7 @@ namespace CustomTrial.Behaviours
         {
             _control.SetState("Init");
 
-            _control.Fsm.GetFsmFloat("Rage Point X").Value = (ArenaInfo.RightX - ArenaInfo.LeftX) / 2.0f;
+            _control.Fsm.GetFsmFloat("Rage Point X").Value = ArenaInfo.CenterX;
             _control.Fsm.GetFsmFloat("Range Max").Value = ArenaInfo.RightX;
             _control.Fsm.GetFsmFloat("Range Min").Value = ArenaInfo.LeftX; 
                     

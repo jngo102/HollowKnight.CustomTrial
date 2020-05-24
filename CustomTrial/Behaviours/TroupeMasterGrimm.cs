@@ -34,7 +34,7 @@ namespace CustomTrial.Behaviours
             _control.Fsm.GetFsmFloat("Max X").Value = ArenaInfo.RightX;
             _control.Fsm.GetFsmFloat("Min X").Value = ArenaInfo.LeftX;
 
-            _control.GetAction<SetPosition>("Balloon Pos").x = (ArenaInfo.RightX - ArenaInfo.LeftX) / 2.0f;
+            _control.GetAction<SetPosition>("Balloon Pos").x = ArenaInfo.CenterX;
             _control.GetAction<SetPosition>("Balloon Pos").y = 14.0f;
             
             _control.RemoveAction<ApplyMusicCue>("Bow");

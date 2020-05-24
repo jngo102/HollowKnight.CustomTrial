@@ -19,7 +19,55 @@ namespace CustomTrial
         {
             string goName = gameObject.name;
 
-            if (goName.Contains("Infected Knight"))
+            if (goName.Contains("Mantis Flyer Child"))
+            {
+                gameObject.AddComponent<MantisYouth>();
+            }
+            else if (goName.Contains("Mantis") && !goName.Contains("Traitor") && !goName.Contains("Lord"))
+            {
+                gameObject.AddComponent<MantisWarrior>();
+            }
+            else if (goName.Contains("Mage Balloon"))
+            {
+                gameObject.AddComponent<Folly>();
+            }
+            else if (goName.Contains("Mage Blob"))
+            {
+                gameObject.AddComponent<Mistake>();
+            }
+            else if (goName.Contains("Plant Trap"))
+            {
+                gameObject.LocateMyFSM("Plant Trap Control").SetState("Init");
+            }
+            else if (goName.Contains("Baby Centipede"))
+            {
+                gameObject.AddComponent<Dirtcarver>();
+            }
+            else if (goName.Contains("Spider Flyer"))
+            {
+                gameObject.AddComponent<LittleWeaver>();
+            }
+            else if (goName.Contains("Parasite Balloon"))
+            {
+                gameObject.AddComponent<InfectedBalloon>();
+            }
+            else if (goName.Contains("Mage") && !goName.Contains("Knight") && !goName.Contains("Lord"))
+            {
+                gameObject.AddComponent<SoulTwister>();
+            }
+            else if (goName.Contains("Moss Knight") && !goName.Contains("Fat"))
+            {
+                gameObject.AddComponent<MossKnight>();
+            }
+            else if (goName.Contains("Moss Knight Fat"))
+            {
+                Destroy(gameObject.LocateMyFSM("FSM"));
+            }
+            else if (goName.Contains("Bee Hatchling Ambient"))
+            {
+                gameObject.LocateMyFSM("Bee").SetState("Pause");
+            }
+            else if (goName.Contains("Infected Knight"))
             {
                 gameObject.AddComponent<BrokenVessel>();
             }
@@ -50,6 +98,12 @@ namespace CustomTrial
             else if (goName.Contains("False Knight New"))
             {
                 gameObject.AddComponent<FalseKnight>();
+            }
+            else if (goName.Contains("Fluke Mother"))
+            {
+                gameObject.AddComponent<Flukemarm>();
+                GameObject hatcherCage = Instantiate(CustomTrial.GameObjects["Hatcher Cage (2)"]);
+                hatcherCage.SetActive(true);
             }
             else if (goName.Contains("Ghost Warrior Galien"))
             {
@@ -83,9 +137,21 @@ namespace CustomTrial
             {
                 gameObject.AddComponent<GreyPrinceZote>();
             }
-            else if (goName.Contains("Grimm Boss"))
+            else if (goName.Contains("Grimm Boss") && !goName.Contains("Nightmare"))
             {
                 gameObject.AddComponent<TroupeMasterGrimm>();
+            }
+            else if (goName.Contains("Lancer"))
+            {
+                gameObject.AddComponent<Lancer>();
+            }
+            else if (goName.Contains("Lobster"))
+            {
+                gameObject.AddComponent<Lobster>();
+            }
+            else if (goName.Contains("Giant Fly"))
+            {
+                gameObject.AddComponent<GruzMother>();
             }
             else if (goName.Contains("Hive Knight"))
             {
@@ -99,6 +165,14 @@ namespace CustomTrial
             {
                 gameObject.AddComponent<HornetProtector>();
             }
+            else if (goName.Contains("Lost Kin"))
+            {
+                gameObject.AddComponent<LostKin>();
+            }
+            else if (goName.Contains("Mantis Lord"))
+            {
+                gameObject.AddComponent<MantisLord>();
+            }
             else if (goName.Contains("Mantis Traitor Lord"))
             {
                 gameObject.AddComponent<TraitorLord>();
@@ -107,13 +181,82 @@ namespace CustomTrial
             {
                 gameObject.AddComponent<MassiveMossCharger>();
             }
+            else if (goName.Contains("Oro") || goName.Contains("Mato"))
+            {
+                gameObject.AddComponent<Nailmaster>();
+            }
             else if (goName.Contains("Nightmare Grimm Boss"))
             {
                 gameObject.AddComponent<NightmareKingGrimm>();
             }
+            else if (goName.Contains("Mimic Spider"))
+            {
+                gameObject.AddComponent<Nosk>();
+            }
+            else if (goName.Contains("Hornet Nosk"))
+            {
+                gameObject.AddComponent<WingedNosk>();
+            }
+            else if (goName.Contains("Oblobble"))
+            {
+                gameObject.AddComponent<Oblobble>();
+            }
+            else if (goName.Contains("Sheo Boss"))
+            {
+                gameObject.AddComponent<PaintmasterSheo>();
+            }
+            else if (goName.Contains("Sly Boss"))
+            {
+                gameObject.AddComponent<GreatNailsageSly>();
+            }
+            else if (goName.Contains("Mage Lord") && !goName.Contains("Dream"))
+            {
+                gameObject.AddComponent<SoulMaster>();
+            }
+            else if (goName.Contains("Dream Mage Lord"))
+            {
+                gameObject.AddComponent<SoulTyrant>();
+            }
+            else if (goName.Contains("Mage Knight"))
+            {
+                gameObject.AddComponent<SoulWarrior>();
+            }
+            else if (goName.Contains("Mega Jellyfish GG"))
+            {
+                gameObject.AddComponent<Uumuu>();
+                GameObject jellyfishSpawner = Instantiate(CustomTrial.GameObjects["Jellyfish Spawner"], new Vector2(ArenaInfo.CenterX, ArenaInfo.CenterY), Quaternion.identity);
+                jellyfishSpawner.SetActive(true);
+                jellyfishSpawner.AddComponent<JellyfishSpawner>();
+                GameObject multizaps = Instantiate(CustomTrial.GameObjects["Mega Jellyfish Multizaps"], new Vector2(ArenaInfo.CenterX, ArenaInfo.CenterY), Quaternion.identity);
+                multizaps.SetActive(true);
+            }
+            else if (goName.Contains("Black Knight"))
+            {
+                gameObject.AddComponent<WatcherKnight>();
+            }
             else if (goName.Contains("White Defender"))
             {
                 gameObject.AddComponent<WhiteDefender>();
+            }
+            else if (goName.Contains("Hollow Knight Boss"))
+            {
+                gameObject.AddComponent<TheHollowKnight>();
+            }
+            else if (goName.Contains("Radiance") && !goName.Contains("Absolute"))
+            {
+                gameObject.AddComponent<TheRadiance>();
+            }
+            else if (goName.Contains("Flamebearer Large"))
+            {
+                gameObject.AddComponent<Grimmkin>().grimmchildLevel = 3;
+            }
+            else if (goName.Contains("Flamebearer Med"))
+            {
+                gameObject.AddComponent<Grimmkin>().grimmchildLevel = 2;
+            }
+            else if (goName.Contains("Flamebearer Small"))
+            {
+                gameObject.AddComponent<Grimmkin>().grimmchildLevel = 1;
             }
             else
             {

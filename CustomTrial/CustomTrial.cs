@@ -4,9 +4,12 @@ using Modding;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using CustomTrial.Classes;
 using CustomTrial.Utilities;
 using HutongGames.PlayMaker.Actions;
+using ModCommon;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Newtonsoft.Json;
@@ -15,6 +18,8 @@ namespace CustomTrial
 {
     public class CustomTrial : Mod<SaveSettings, GlobalSettings>
     {
+        private string _jmlPath = Application.streamingAssetsPath + "\\CustomTrial.WaveSequence.jml";
+        
         public static Dictionary<string, GameObject> GameObjects = new Dictionary<string, GameObject>();
 
         private Dictionary<string, (string, string)> _preloadDictionary = new Dictionary<string, (string, string)>
@@ -22,7 +27,7 @@ namespace CustomTrial
             ["Lesser Mawlek"] = ("Abyss_17", "Lesser Mawlek"),
             ["Shadow Creeper"] = ("Abyss_20", "Abyss Crawler"),
             ["Infected Balloon"] = ("Abyss_20", "Parasite Balloon (6)"),
-            ["Mawlurk"] = ("Abyss_20", "Scuttler Spawn 1"),
+            ["Mawlurk"] = ("Abyss_20", "Mawlek Turret"),
             ["Vengefly"] = ("Cliffs_02", "Buzzer"),
             ["Crawlid"] = ("Cliffs_02", "Crawler"),
             ["Husk Bully"] = ("Cliffs_02", "Zombie Barger"),
@@ -49,8 +54,7 @@ namespace CustomTrial
             ["Carver Hatcher"] = ("Deepnest_26b", "Centipede Hatcher (4)"),
             ["Stalking Devout"] = ("Deepnest_34", "Slash Spider"),
             ["Deephunter"] = ("Deepnest_34", "Spider Mini"),
-            ["Corpse Crawler Hornhead"] = ("Deepnest_34", "Zombie Hornhead Sp"),
-            ["Corpse Crawler Runner"] = ("Deepnest_34", "Zombie Runner Sp"),
+            ["Corpse Crawler"] = ("Deepnest_34", "Zombie Hornhead Sp"),
             ["Grub Mimic"] = ("Deepnest_36", "Grub Mimic Top"),
             ["Little Weaver"] = ("Deepnest_41", "Spider Flyer"),
             ["Deepling"] = ("Deepnest_41", "Tiny Spider"),
@@ -67,7 +71,7 @@ namespace CustomTrial
             ["Moss Knight"] = ("Fungus1_21", "Battle Scene/Moss Knight"),
             ["Mantis Warrior"] = ("Fungus2_12", "Mantis"),
             ["Mantis Youth"] = ("Fungus2_12", "Mantis Flyer Child"),
-            ["Fungified Husk A"] = ("Fungus2_18", "Zombie Fungus A"),
+            ["Fungified Husk"] = ("Fungus2_18", "Zombie Fungus A"),
             ["Fungling"] = ("Fungus2_18", "_Scenery/Fungoon Baby"),
             ["Fungoon"] = ("Fungus2_18", "_Scenery/Fungus Flyer"),
             ["Ambloom"] = ("Fungus2_30", "Fung Crawler"),
@@ -82,12 +86,14 @@ namespace CustomTrial
             ["Mossfly"] = ("Fungus3_22", "Moss Flyer (3)"),
             ["Loodle"] = ("Fungus3_48", "Grass Hopper"),
             ["Aluba"] = ("Fungus3_48", "Lazy Flyer Enemy"),
+            ["Ooma"] = ("Fungus3_25b", "Jellyfish"),
+            ["Uoma"] = ("Fungus3_25b", "Jellyfish Baby"),
             ["Fool Eater"] = ("Fungus3_48", "Plant Trap"),
             ["Flukemunga"] = ("GG_Pipeway", "Fat Fluke"),
-            ["Hiveling"] = ("Hive_04", "Bee Hatchling Ambient (22)"),
-            ["Hive Soldier"] = ("Hive_04", "Bee Stinger (10)"),
-            ["Hive Guardian"] = ("Hive_04", "Big Bee (3)"),
-            ["Husk Hive"] = ("Hive_04", "Hatcher Cage (2)/Hiveling Spawner"),
+            ["Hiveling"] = ("Hive_03", "Bee Hatchling Ambient (22)"),
+            ["Hive Soldier"] = ("Hive_03", "Bee Stinger (10)"),
+            ["Hive Guardian"] = ("Hive_03", "Big Bee (2)"),
+            ["Husk Hive"] = ("Hive_01", "Zombie Hive"),
             ["Glimback"] = ("Mines_07", "Crystal Crawler"),
             ["Crystal Hunter"] = ("Mines_07", "Crystal Flyer"),
             ["Crystal Crawler"] = ("Mines_11", "Crystallised Lazer Bug"),
@@ -103,8 +109,7 @@ namespace CustomTrial
             ["Gluttonous Husk"] = ("Ruins_House_02", "Royal Zombie Fat"),
             ["Husk Dandy"] = ("Ruins_House_02", "Royal Zombie 1 (1)"),
             ["Folly"] = ("Ruins1_32", "Mage Balloon"),
-            ["Mistake 1"] = ("Ruins1_32", "Mage Blob 1"),
-            ["Mistake 2"] = ("Ruins1_32", "Mage Blob 2"),
+            ["Mistake"] = ("Ruins1_32", "Mage Blob 1"),
             ["Heavy Sentry"] = ("Ruins2_09", "Battle Scene/Wave 1/Ruins Sentry Fat"),
             ["Husk Sentry"] = ("Ruins2_09", "Battle Scene/Wave 1/Ruins Sentry 1"),
             ["Winged Sentry"] = ("Ruins2_09", "Battle Scene/Wave 2/Ruins Flying Sentry"),
@@ -160,9 +165,18 @@ namespace CustomTrial
             ["Soul Tyrant"] = ("GG_Soul_Tyrant", "Dream Mage Lord"),
             ["Traitor Lord"] = ("GG_Traitor_Lord", "Battle Scene/Wave 3/Mantis Traitor Lord"),
             ["Uumuu"] = ("GG_Uumuu", "Mega Jellyfish GG"),
+            ["Jellyfish Spawner"] = ("GG_Uumuu", "Jellyfish Spawner"),
+            ["Mega Jellyfish Multizaps"] = ("GG_Uumuu", "Mega Jellyfish Multizaps"),
+            ["Hatcher Cage (2)"] = ("GG_Flukemarm", "Hatcher Cage (2)"),
             ["Vengefly King"] = ("GG_Vengefly", "Giant Buzzer Col"),
             ["Watcher Knight"] = ("GG_Watcher_Knights", "Battle Control/Black Knight 1"),
-            ["White Defender"] = ("GG_White_Defender", "White Defender"),    
+            ["White Defender"] = ("GG_White_Defender", "White Defender"),
+            ["The Hollow Knight"] = ("Room_Final_Boss_Core", "Boss Control/Hollow Knight Boss"),
+            ["The Radiance"] = ("Dream_Final_Boss", "Boss Control/Radiance"),
+            ["Sibling"] = ("Abyss_15", "Shade Sibling (14)"),
+            ["Grimmkin Novice"] = ("Mines_10", "Flamebearer Spawn"),
+            ["Grimmkin Master"] = ("RestingGrounds_06", "Flamebearer Spawn"),
+            ["Grimmkin Nightmare"] = ("Hive_03", "Flamebearer Spawn"),
         };
         
         public static BattleControl battleControl = new BattleControl();
@@ -176,31 +190,43 @@ namespace CustomTrial
         private List<(string, string)> GetEnemyPreloads()
         {
             // This implementation is so bad it makes me want to die
-            List<string> text = File.ReadAllLines("C:\\Users\\Jason\\Documents\\Hollow Knight Stuff\\Modding\\CustomTrial\\CustomTrial\\CustomTrial.WaveSequence.jml").ToList();
+            List<string> text = File.ReadAllLines(_jmlPath).ToList();
             List<string> goNames = new List<string>();
             foreach (string line in text)
             {
                 string trimmedLine = line.Trim(' ');
-                if (trimmedLine == "\\" || trimmedLine == "true" || trimmedLine == "false")
+                if (trimmedLine == "\\" || trimmedLine == "true" || trimmedLine == "false" || trimmedLine.StartsWith("#") || char.IsDigit(trimmedLine[0]))
                 {
                     continue;
                 }
-                else
+                
+                string goName = trimmedLine.Split(',')[0];
+                Log("GameObject Name: " + goName);
+                if (!goNames.Contains(goName))
                 {
-                    string goName = trimmedLine.Split(',')[0];
-                    Log("GameObject Name: " + goName);
-                    if (!goNames.Contains(goName))
+                    switch (goName)
                     {
-                        goNames.Add(goName);
+                        case "Flukemarm":
+                            goNames.Add("Hatcher Cage (2)");
+                            break;
+                        case "Uumuu":
+                            goNames.Add("Jellyfish Spawner");
+                            goNames.Add("Mega Jellyfish Multizaps");
+                            break;
                     }
+                    
+                    goNames.Add(goName);
                 }
             }
-
+            
             List<(string, string)> preloads = new List<(string, string)>();
             
             foreach (string goName in goNames)
             {
-                preloads.Add(_preloadDictionary[goName]);
+                if (_preloadDictionary.Keys.Contains(goName))
+                {
+                    preloads.Add(_preloadDictionary[goName]);
+                }
             }
 
             return preloads;
@@ -232,17 +258,31 @@ namespace CustomTrial
             GameObjects.Add("Platform", preloadedObjects["Room_Colosseum_Gold"]["Colosseum Manager/Waves/Arena 1/Colosseum Platform"]);
             
             // Enemies
-            List<string> txt = File.ReadAllLines("C:\\Users\\Jason\\Documents\\Hollow Knight Stuff\\Modding\\CustomTrial\\CustomTrial\\CustomTrial.WaveSequence.jml").ToList();
+            List<string> txt = File.ReadAllLines(_jmlPath).ToList();
             List<string> goNames = new List<string>();
             foreach (string line in txt)
             {
                 string trimmedLine = line.Trim(' ');
-                if (trimmedLine != "\\" && trimmedLine != "true" && trimmedLine != "false")
+                if (trimmedLine.StartsWith("#"))
+                {
+                    continue;
+                }
+                
+                if (trimmedLine != "\\" && trimmedLine != "true" && trimmedLine != "false" && !char.IsDigit(trimmedLine[0]))
                 {
                     string goName = trimmedLine.Split(',')[0];
-                    Log("gameobject name: " + goName);
                     if (!goNames.Contains(goName))
                     {
+                        switch (goName)
+                        {
+                            case "Flukemarm":
+                                goNames.Add("Hatcher Cage (2)");
+                                break;
+                            case "Uumuu":
+                                goNames.Add("Jellyfish Spawner");
+                                goNames.Add("Mega Jellyfish Multizaps");
+                                break;
+                        }
                         goNames.Add(goName);
                     }
                 }
@@ -250,25 +290,37 @@ namespace CustomTrial
 
             foreach (string goName in goNames)
             {
-                (string, string) preloadTuple = _preloadDictionary[goName];
-                Log("Scene: " + preloadTuple.Item1 + ", GameObject: " + preloadTuple.Item2);
-                GameObjects.Add(goName, preloadedObjects[preloadTuple.Item1][preloadTuple.Item2]);
+                if (_preloadDictionary.Keys.Contains(goName))
+                {
+                    (string, string) preloadTuple = _preloadDictionary[goName];
+                    Log("Scene: " + preloadTuple.Item1 + ", GameObject: " + preloadTuple.Item2);
+                    GameObject gameObject = preloadedObjects[preloadTuple.Item1][preloadTuple.Item2];
+                    if (goName.Contains("Grimmkin"))
+                    {
+                        gameObject = gameObject.LocateMyFSM("Spawn Control").Fsm.GetFsmGameObject("Grimmkin Obj").Value;
+                    }
+                    GameObjects.Add(goName, gameObject);   
+                }
             }
 
             Instance = this;
             
             // This implementation is so bad it makes me want to die
-            List<string> text = File.ReadAllLines("C:\\Users\\Jason\\Documents\\Hollow Knight Stuff\\Modding\\CustomTrial\\CustomTrial\\CustomTrial.WaveSequence.jml").ToList();
+            List<string> text = File.ReadAllLines(_jmlPath).ToList();
             Wave newWave = null;
             foreach (string line in text)
             {
                 Log("Line: " + line);
                 string trimmedLine = line.Trim(' ');
+                if (trimmedLine.StartsWith("#"))
+                {
+                    continue;
+                }
+                
                 if (trimmedLine == "\\")
                 {
                     if (newWave != null)
                     {
-                        Log("Adding Wave to Battle Control: " + (battleControl == null));
                         battleControl.Waves.Add(newWave);
                         Log("Done");
                     }
@@ -281,14 +333,35 @@ namespace CustomTrial
                     Log("Adding Spikes bool: " + bool.Parse(trimmedLine));
                     newWave.Spikes = bool.Parse(trimmedLine);
                 }
+                else if (char.IsDigit(trimmedLine[0]))
+                {
+                    Log("Adding Cooldown: " + trimmedLine);
+                    newWave.Cooldown = float.Parse(trimmedLine);
+                }
+                else if (trimmedLine.StartsWith("Wall"))
+                {
+                    List<string> parameters = trimmedLine.Split(',').ToList();
+                    string wall = parameters[0];
+                    float distance = float.Parse(parameters[1]);
+                    switch (wall)
+                    {
+                        case "Wall C":
+                            Log("Adding Distance " + distance + " to Wall C");
+                            newWave.WallCDistance = distance;
+                            break;
+                        case "Wall L":
+                            Log("Adding Distance " + distance + " to Wall L");
+                            newWave.WallLDistance = distance;
+                            break;
+                        case "Wall R":
+                            Log("Adding Distance " + distance + " to Wall R");
+                            newWave.WallRDistance = distance;
+                            break;
+                    }
+                }
                 else
                 {
                     List<string> parameters = trimmedLine.Split(',').ToList();
-                    foreach (string param in parameters)
-                    {
-                        Log("Parameter: " + param);
-                    }
-
                     string goName = parameters[0];
                     float spawnX = float.Parse(parameters[1]);
                     float spawnY = float.Parse(parameters[2]);
@@ -300,11 +373,9 @@ namespace CustomTrial
                     }
                     else
                     {
-                        Log("Adding to Enemies");
+                        Log("Adding enemy " + goName + " at " + spawnPos);
                         newWave.Enemies.Add(goName);
-                        Log("Adding to Enemy Spawn");
                         newWave.EnemySpawn.Add(spawnPos);
-                        Log("Done");
                     }
                 }
             }

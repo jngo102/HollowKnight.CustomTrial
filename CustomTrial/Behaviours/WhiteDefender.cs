@@ -25,7 +25,7 @@ namespace CustomTrial.Behaviours
             _constrainX.Fsm.GetFsmFloat("Edge L").Value = ArenaInfo.LeftX;
             _constrainX.Fsm.GetFsmFloat("Edge R").Value = ArenaInfo.RightX;
             
-            _dd.Fsm.GetFsmFloat("Centre X").Value = (ArenaInfo.RightX - ArenaInfo.LeftX) / 2.0f;
+            _dd.Fsm.GetFsmFloat("Centre X").Value = ArenaInfo.CenterX;
             _dd.Fsm.GetFsmFloat("Dolphin Max X").Value = ArenaInfo.RightX - 4 ;
             _dd.Fsm.GetFsmFloat("Dolphin Min X").Value = ArenaInfo.LeftX + 4;
             _dd.Fsm.GetFsmFloat("Erupt Y").Value = GroundY;

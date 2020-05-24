@@ -60,33 +60,66 @@
     <Reference Include="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\..\..\..\Program Files\Unity\Editor\Data\Managed\UnityEngine\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.Physics2DModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArenaInfo.cs" />
     <Compile Include="Behaviours\BrokenVessel.cs" />
     <Compile Include="Behaviours\BroodingMawlek.cs" />
     <Compile Include="Behaviours\CrystalGuardian.cs" />
+    <Compile Include="Behaviours\Dirtcarver.cs" />
     <Compile Include="Behaviours\DungDefender.cs" />
     <Compile Include="Behaviours\ElderHu.cs" />
     <Compile Include="Behaviours\EnragedGuardian.cs" />
     <Compile Include="Behaviours\FailedChampion.cs" />
     <Compile Include="Behaviours\FalseKnight.cs" />
+    <Compile Include="Behaviours\Flukemarm.cs" />
+    <Compile Include="Behaviours\Folly.cs" />
     <Compile Include="Behaviours\Galien.cs" />
     <Compile Include="Behaviours\Gorb.cs" />
+    <Compile Include="Behaviours\GreatNailsageSly.cs" />
     <Compile Include="Behaviours\GreyPrinceZote.cs" />
+    <Compile Include="Behaviours\Grimmkin.cs" />
+    <Compile Include="Behaviours\GruzMother.cs" />
     <Compile Include="Behaviours\HiveKnight.cs" />
     <Compile Include="Behaviours\HornetProtector.cs" />
+    <Compile Include="Behaviours\InfectedBalloon.cs" />
+    <Compile Include="Behaviours\JellyfishSpawner.cs" />
+    <Compile Include="Behaviours\Lancer.cs" />
+    <Compile Include="Behaviours\LittleWeaver.cs" />
+    <Compile Include="Behaviours\Lobster.cs" />
+    <Compile Include="Behaviours\LostKin.cs" />
+    <Compile Include="Behaviours\MantisLord.cs" />
+    <Compile Include="Behaviours\MantisWarrior.cs" />
+    <Compile Include="Behaviours\MantisYouth.cs" />
     <Compile Include="Behaviours\Markoth.cs" />
     <Compile Include="Behaviours\Marmu.cs" />
     <Compile Include="Behaviours\MassiveMossCharger.cs" />
+    <Compile Include="Behaviours\Mistake.cs" />
+    <Compile Include="Behaviours\MossKnight.cs" />
+    <Compile Include="Behaviours\Nailmaster.cs" />
     <Compile Include="Behaviours\NightmareKingGrimm.cs" />
     <Compile Include="Behaviours\NoEyes.cs" />
+    <Compile Include="Behaviours\Nosk.cs" />
+    <Compile Include="Behaviours\Oblobble.cs" />
+    <Compile Include="Behaviours\PaintmasterSheo.cs" />
     <Compile Include="Behaviours\PrimalAspid.cs" />
     <Compile Include="Behaviours\PureVessel.cs" />
+    <Compile Include="Behaviours\SoulMaster.cs" />
+    <Compile Include="Behaviours\SoulTwister.cs" />
+    <Compile Include="Behaviours\SoulTyrant.cs" />
+    <Compile Include="Behaviours\SoulWarrior.cs" />
     <Compile Include="Behaviours\TheCollector.cs" />
+    <Compile Include="Behaviours\TheHollowKnight.cs" />
+    <Compile Include="Behaviours\TheRadiance.cs" />
     <Compile Include="Behaviours\TraitorLord.cs" />
     <Compile Include="Behaviours\TroupeMasterGrimm.cs" />
+    <Compile Include="Behaviours\Uumuu.cs" />
+    <Compile Include="Behaviours\WatcherKnight.cs" />
     <Compile Include="Behaviours\WhiteDefender.cs" />
+    <Compile Include="Behaviours\WingedNosk.cs" />
     <Compile Include="Behaviours\Xero.cs" />
     <Compile Include="Classes\Wave.cs" />
     <Compile Include="Classes\Waves.cs" />
@@ -104,7 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CustomTrial.GlobalSettings.json" />
-    <Content Include="CustomTrial.WaveSequence.jml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
