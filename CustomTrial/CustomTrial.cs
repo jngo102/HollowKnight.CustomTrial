@@ -21,7 +21,6 @@ namespace CustomTrial
 
         private Dictionary<string, (string, string)> _preloadDictionary = new Dictionary<string, (string, string)>
         {
-            ["Lesser Mawlek"] = ("Abyss_17", "Lesser Mawlek"),
             ["Shadow Creeper"] = ("Abyss_20", "Abyss Crawler"),
             ["Infected Balloon"] = ("Abyss_20", "Parasite Balloon (6)"),
             ["Mawlurk"] = ("Abyss_20", "Mawlek Turret"),
@@ -40,13 +39,10 @@ namespace CustomTrial
             ["Aspid Hunter"] = ("Crossroads_19", "_Enemies/Spitter"),
             ["Leaping Husk"] = ("Crossroads_19", "_Enemies/Zombie Leaper"),
             ["Wandering Husk"] = ("Crossroads_19", "_Enemies/Zombie Runner"),
-            ["Furious Vengefly"] = ("Crossroads_21", "infected_event/Angry Buzzer"),
             ["Husk Guard"] = ("Crossroads_21", "non_infected_event/Zombie Guard"),
-            ["Primal Aspid"] = ("Deepnest_East_06", "Super Spitter"),
             ["Hopper"] = ("Deepnest_East_06", "Hopper"),
             ["Great Hopper"] = ("Deepnest_East_06", "Hopper Spawn/Giant Hopper"),
             ["Boofly"] = ("Deepnest_East_07", "Blow Fly"),
-            ["Belfly"] = ("Deepnest_East_07", "Ceiling Dropper"),
             ["Dirtcarver"] = ("Deepnest_17", "Baby Centipede"),
             ["Carver Hatcher"] = ("Deepnest_26b", "Centipede Hatcher (4)"),
             ["Stalking Devout"] = ("Deepnest_34", "Slash Spider"),
@@ -77,9 +73,7 @@ namespace CustomTrial
             ["Shrumal Warrior"] = ("Fungus2_30", "Mushroom Roller"),
             ["Sporg"] = ("Fungus2_30", "Mushroom Turret"),
             ["Spiny Husk"] = ("Fungus3_22", "Garden Zombie"),
-            ["Mantis Petra"] = ("Fungus3_22", "Mantis Heavy Flyer"),
             ["Mossy Vagabond"] = ("Fungus3_39", "Moss Knight Fat"),
-            ["Mantis Traitor"] = ("Fungus3_39", "Shiny Spawner/Mantis Heavy Spawn"),
             ["Mossfly"] = ("Fungus3_22", "Moss Flyer (3)"),
             ["Loodle"] = ("Fungus3_48", "Grass Hopper"),
             ["Aluba"] = ("Fungus3_48", "Lazy Flyer Enemy"),
@@ -98,8 +92,6 @@ namespace CustomTrial
             ["Husk Miner"] = ("Mines_11", "Zombie Miner 1"),
             ["Crystallised Husk"] = ("Mines_23", "Zombie Beam Miner"),
             ["Entombed Husk"] = ("RestingGrounds_10", "Grave Zombie"),
-            ["Soul Twister"] = ("Room_Colosseum_Gold", "Colosseum Manager/Waves/Wave 22/Mage"),
-            ["Volt Twister"] = ("Room_Colosseum_Gold", "Colosseum Manager/Waves/Wave 25/Electric Mage New"),
             ["Great Husk Sentry"] = ("Ruins_House_01", "Battle Scene/Great Shield Zombie"),
             ["Gorgeous Husk"] = ("Ruins_House_02", "Gorgeous Husk"),
             ["Cowardly Husk"] = ("Ruins_House_02", "Royal Zombie Coward"),
@@ -190,6 +182,26 @@ namespace CustomTrial
         
         public static BattleControl BattleControl = new BattleControl();
         public static CustomTrial Instance { get; private set; }
+        
+        private List<string> _colosseumEnemies = new List<string>
+        {
+            "Armored Squit",
+            "Battle Obble",
+            "Belfly",
+            "Death Loodle",
+            "Furious Vengefly",
+            "Heavy Fool",
+            "Lesser Mawlek",
+            "Mantis Petra",
+            "Mantis Traitor",
+            "Primal Aspid",
+            "Sharp Baldur",
+            "Sturdy Fool",
+            "Shielded Fool",
+            "Soul Twister",
+            "Volt Twister",
+            "Winged Fool",
+        };
 
         public override string GetVersion()
         {
@@ -240,6 +252,7 @@ namespace CustomTrial
                     10.0f,
                     true);
                 BattleControl = new BattleControl();
+                BattleControl.GeoReward = 100;
                 BattleControl.AddWave(exampleWave1);
                 BattleControl.AddWave(exampleWave2);
                 StreamWriter writer = new StreamWriter(_xmlPath);
@@ -257,7 +270,7 @@ namespace CustomTrial
             {
                 foreach (Enemy enemy in wave.Enemies)
                 {
-                    if (!preloads.Contains(_preloadDictionary[enemy.Name]))
+                    if (!_colosseumEnemies.Contains(enemy.Name) && !preloads.Contains(_preloadDictionary[enemy.Name]))
                     {
                         preloads.Add(_preloadDictionary[enemy.Name]);
                         GameObjects.Add(enemy.Name, null);
@@ -298,7 +311,6 @@ namespace CustomTrial
         public override List<(string, string)> GetPreloadNames()
         {
             List<(string, string)> preloads = GetEnemyPreloads();
-
             return preloads;
         }
 

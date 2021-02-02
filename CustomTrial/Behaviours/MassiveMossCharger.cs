@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using HutongGames.PlayMaker.Actions;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -14,11 +16,19 @@ namespace CustomTrial.Behaviours
 
         private IEnumerator Start()
         {
-            _control.SetState("Init");
+            _control.GetAction<FloatCompare>("In Air").float2 = ArenaInfo.BottomY + 2;
             
-            yield return new WaitWhile(() => _control.ActiveStateName != "Init");
+            _control.GetState("Music 2").RemoveAction<TransitionToAudioSnapshot>();
 
-            _control.SendEvent("SUBMERGE");
+            _control.SetState("Init");
+
+            yield return new WaitUntil(() => _control.ActiveStateName == "Sleep");
+
+            _control.Fsm.GetFsmFloat("X Max").Value = ArenaInfo.RightX - 4;
+            _control.Fsm.GetFsmFloat("X Min").Value = ArenaInfo.LeftX + 4;
+            _control.Fsm.GetFsmFloat("Start Y").Value = ArenaInfo.BottomY + 2;
+            
+            _control.SetState("Submerge 1");
         }
     }
 }

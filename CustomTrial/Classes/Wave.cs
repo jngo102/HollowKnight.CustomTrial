@@ -10,6 +10,7 @@ namespace CustomTrial.Classes
     public class BattleControl
     {
         [XmlElement("Wave")] public List<Wave> Waves;
+        [XmlElement("GeoReward")] public int GeoReward;
 
         public BattleControl()
         {

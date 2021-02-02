@@ -12,7 +12,7 @@ namespace CustomTrial
         {
             _hm = GetComponent<HealthManager>();
             _fsm = GetComponent<PlayMakerFSM>();
-            _hm.OnDeath += OnDeath;
+            _hm.OnDeath += () => ColosseumManager.EnemyCount--;
         }
 
         private void Start()
@@ -318,11 +318,6 @@ namespace CustomTrial
             {
                 _fsm.SetState("Init");
             }
-        }
-
-        private void OnDeath()
-        {
-            ColosseumManager.EnemyCount--;
         }
     }
 }
