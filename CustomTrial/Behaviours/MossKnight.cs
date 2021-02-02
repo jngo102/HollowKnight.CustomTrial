@@ -16,9 +16,11 @@ namespace CustomTrial.Behaviours
         {
             _control.Fsm.GetFsmBool("Dormant").Value = false;
             
-            _control.SetState("Initialise");
+            _control.SetState("Pause Frame");
 
-            yield return null;
+            yield return new WaitUntil(() => _control.ActiveStateName == "Sleep");
+
+            _control.SetState("Wake");
         }
     }
 }

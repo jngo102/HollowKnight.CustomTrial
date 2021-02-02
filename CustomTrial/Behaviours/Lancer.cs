@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using ModCommon.Util;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -19,7 +19,7 @@ namespace CustomTrial.Behaviours
         {
             _control.SetState("Init");
 
-            _death.InsertMethod("Set", 0, () => Destroy(gameObject, 3));
+            _death.GetState("Set").InsertMethod(0, () => Destroy(gameObject, 3));
             
             yield return new WaitWhile(() => _control.ActiveStateName != "Launch");
 

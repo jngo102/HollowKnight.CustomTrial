@@ -1,7 +1,7 @@
 ﻿using System.Collections;
-using CustomTrial.Utilities;
 using HutongGames.PlayMaker.Actions;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -16,7 +16,7 @@ namespace CustomTrial.Behaviours
 
         private IEnumerator Start()
         {
-            _control.RemoveAction<ApplyMusicCue>("Fly");
+            _control.GetState("Fly").RemoveAction<ApplyMusicCue>();
             
             _control.SetState("Init");
 
@@ -25,11 +25,6 @@ namespace CustomTrial.Behaviours
             yield return new WaitWhile(() => _control.ActiveStateName != "Invincible" && _control.ActiveStateName != "Wake");
 
             _control.SetState("Fly");
-        }
-        
-        private void Update()
-        {
-            Modding.Logger.Log("[Gruz Mother] " + _control.ActiveStateName);
         }
     }
 }

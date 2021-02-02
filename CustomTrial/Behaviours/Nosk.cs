@@ -1,7 +1,7 @@
-﻿using CustomTrial.Utilities;
-using System.Collections;
+﻿using System.Collections;
 using HutongGames.PlayMaker.Actions;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -24,10 +24,10 @@ namespace CustomTrial.Behaviours
             _spider.Fsm.GetFsmFloat("Jump Max X").Value = ArenaInfo.RightX - 2;
             _spider.Fsm.GetFsmFloat("Jump Min X").Value = ArenaInfo.LeftX + 2;
 
-            _spider.RemoveAction<ApplyMusicCue>("Trans 1");
-            _spider.RemoveAction<CreateObject>("Trans 1");
-            _spider.RemoveAction<SetFsmGameObject>("Trans 1");
-            _spider.RemoveAction("Trans 1", 8);
+            _spider.GetState("Trans 1").RemoveAction<ApplyMusicCue>();
+            _spider.GetState("Trans 1").RemoveAction<CreateObject>();
+            _spider.GetState("Trans 1").RemoveAction<SetFsmGameObject>();
+            _spider.GetState("Trans 1").RemoveAction(8);
             
             _spider.SetState("Init");
 

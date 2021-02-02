@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using ModCommon.Util;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -17,7 +17,7 @@ namespace CustomTrial.Behaviours
         {
             _control.SetState("Init");
 
-            _control.InsertMethod("Wake Land", _control.GetState("Wake Land").Actions.Length,
+            _control.GetState("Wake Land").InsertMethod(_control.GetState("Wake Land").Actions.Length,
                 () => _control.SetState("Start"));
             
             yield return new WaitWhile(() => _control.ActiveStateName != "Dormant");

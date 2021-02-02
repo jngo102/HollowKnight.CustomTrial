@@ -18,14 +18,9 @@ namespace CustomTrial.Behaviours
 
             GetComponent<Rigidbody2D>().isKinematic = false;
             
-            yield return new WaitWhile(() => _knight.ActiveStateName != "Rest");
+            yield return new WaitUntil(() => _knight.ActiveStateName == "Rest");
 
             _knight.SetState("Roar End");
-        }
-
-        private void Update()
-        {
-            Modding.Logger.Log("[Watcher Knight] " + _knight.ActiveStateName);
         }
     }
 }

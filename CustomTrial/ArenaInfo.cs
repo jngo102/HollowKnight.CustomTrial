@@ -2,8 +2,8 @@
 {
     public class ArenaInfo
     {
-        public const float DefaultLeftX = 86.1f; 
-        public const float DefaultRightX = 118.8f;
+        public const float DefaultLeftX = 86.6f; 
+        public const float DefaultRightX = 118.3f;
         public const float DefaultTopY = 28.6f;
         public const float DefaultBottomY = 6.4f;
         public const float DefaultCenterX = DefaultLeftX + (DefaultLeftX + DefaultRightX) / 2.0f;

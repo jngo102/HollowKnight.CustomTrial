@@ -1,5 +1,9 @@
 ﻿using System.Collections;
+using HutongGames.PlayMaker;
+using HutongGames.PlayMaker.Actions;
+using ModCommon;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -16,16 +20,18 @@ namespace CustomTrial.Behaviours
         
         private IEnumerator Start()
         {
-            Modding.Logger.Log("Setting Init");
+            gameObject.PrintSceneHierarchyTree();
+
+            _bounce.GetAction<SetPosition>("Swoop In").z = 0.0f;
+            _bounce.GetAction<Translate>("Swoop In").y = -15.0f;
+            _bounce.GetAction<iTweenMoveBy>("Swoop In").vector = Vector3.zero;
+            _bounce.GetAction<iTweenMoveBy>("Swoop In").time = 0.0f;
+
             _attack.SetState("Init");
-            Modding.Logger.Log("Setting Initialise");
             _bounce.SetState("Initialise");
-            
-            Modding.Logger.Log("yield");
-            yield return new WaitWhile(() => _bounce.ActiveStateName != "Swoop In");
-            
-            Modding.Logger.Log("Activate");
-            _bounce.SetState("Activate");
+
+            yield return new WaitUntil(() => _bounce.ActiveStateName == "Swoop In");
+            _bounce.SendEvent("SUMMON");
         }
     }
 }

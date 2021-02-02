@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using CustomTrial.Utilities;
-using HutongGames.PlayMaker.Actions;
-using ModCommon;
+﻿using HutongGames.PlayMaker.Actions;
+using System.Collections;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -19,43 +18,32 @@ namespace CustomTrial.Behaviours
 
         private IEnumerator Start()
         {
-            _control.SetState("Init");
-
-            _control.Fsm.GetFsmFloat("Bottle XL").Value = ArenaInfo.LeftX;
-            _control.Fsm.GetFsmFloat("Bottle XR").Value = ArenaInfo.RightX;
+            _control.Fsm.GetFsmFloat("Bottle XL").Value = ArenaInfo.LeftX + 2;
+            _control.Fsm.GetFsmFloat("Bottle XR").Value = ArenaInfo.RightX - 2;
             _control.Fsm.GetFsmFloat("Roof X L").Value = ArenaInfo.LeftX + 2;
             _control.Fsm.GetFsmFloat("Roof X R").Value = ArenaInfo.RightX - 2;
-            _control.Fsm.GetFsmFloat("Roof Y").Value = ArenaInfo.TopY + 2;
-            _control.Fsm.GetFsmFloat("Return Y").Value = ArenaInfo.TopY + 2;
+            _control.Fsm.GetFsmFloat("Roof Y").Value = ArenaInfo.TopY - 2;
+            _control.Fsm.GetFsmFloat("Return Y").Value = ArenaInfo.TopY - 2;
 
             GameObject spawnJar = _control.GetAction<SpawnObjectFromGlobalPool>("Spawn").gameObject.Value;
-            spawnJar.GetComponent<SpawnJarControl>().spawnY = ArenaInfo.TopY;
+            spawnJar.GetComponent<SpawnJarControl>().spawnY = ArenaInfo.TopY - 5;
             spawnJar.GetComponent<SpawnJarControl>().breakY = ArenaInfo.BottomY;
+            spawnJar.CreatePool(3);
             _control.GetAction<SpawnObjectFromGlobalPool>("Spawn").gameObject.Value = spawnJar;
-
-            _control.GetAction<SetPosition>("Spawn").y.Value = ArenaInfo.TopY - 5;
-            
-            //_control.GetAction<SetPosition>("Spawn").y.Value = ArenaInfo.TopY - 2;
+            _control.Fsm.GetFsmGameObject("Spawn Jar").Value = spawnJar;
+            _control.GetAction<FloatCompare>("Spawn").tolerance = 1;
 
             _death.ChangeTransition("Start Effect", "FINISHED", "Kill Enemies");
-            
-            _control.InsertMethod("Start Land", _control.GetState("Start Land").Actions.Length, () => _control.SetState("Roar Recover"));
+            _death.GetState("Send Event").InsertMethod(_death.GetState("Send Event").Actions.Length, () => ColosseumManager.EnemyCount--);
 
             GetComponent<BoxCollider2D>().enabled = true;
             GetComponent<MeshRenderer>().enabled = true;
 
+            _control.SetState("Init");
+
+            yield return new WaitUntil(() => _control.ActiveStateName == "Sleep");
+
             _control.SetState("Roar Recover");
-
-            yield return null;
-        }
-
-        private void Update()
-        {
-            Vector3 pos = _control.Fsm.GetFsmGameObject("Spawn Jar").Value.transform.position;
-            if (pos.y >= ArenaInfo.TopY - 5)
-            {
-                _control.Fsm.GetFsmGameObject("Spawn Jar").Value.transform.position = new Vector3(pos.x, ArenaInfo.TopY - 5, pos.z);
-            }
         }
     }
 }

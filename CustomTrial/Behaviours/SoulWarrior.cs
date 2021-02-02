@@ -28,10 +28,5 @@ namespace CustomTrial.Behaviours
             
             _knight.SetState("Idle");
         }
-
-        private void Update()
-        {
-            Modding.Logger.Log("[Soul Warrior] " + _knight.ActiveStateName);
-        }
     }
 }

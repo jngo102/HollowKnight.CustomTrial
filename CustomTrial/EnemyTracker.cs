@@ -43,6 +43,10 @@ namespace CustomTrial
             {
                 gameObject.AddComponent<Dirtcarver>();
             }
+            else if (goName.Contains("Shade Sibling"))
+            {
+                gameObject.AddComponent<Sibling>();
+            }
             else if (goName.Contains("Spider Flyer"))
             {
                 gameObject.AddComponent<LittleWeaver>();
@@ -66,6 +70,46 @@ namespace CustomTrial
             else if (goName.Contains("Bee Hatchling Ambient"))
             {
                 gameObject.LocateMyFSM("Bee").SetState("Pause");
+            }
+            else if (goName.Contains("Zote Balloon"))
+            {
+                gameObject.AddComponent<VolatileZoteling>();
+            }
+            else if (goName.Contains("Zote Crew Fat"))
+            {
+                gameObject.AddComponent<FatZote>();
+            }
+            else if (goName.Contains("Zote Crew Normal"))
+            {
+                gameObject.AddComponent<ZoteTheMighty>();
+            }
+            else if (goName.Contains("Zote Crew Tall"))
+            {
+                gameObject.AddComponent<TallZote>();
+            }
+            else if (goName.Contains("Zote Fluke"))
+            {
+                gameObject.AddComponent<ZoteFluke>();
+            }
+            else if (goName.Contains("Zote Salubra"))
+            {
+                gameObject.AddComponent<ZoteSalubra>();
+            }
+            else if (goName.Contains("Zote Thwomp"))
+            {
+                gameObject.AddComponent<ZoteThwomp>();
+            }
+            else if (goName.Contains("Zote Turret"))
+            {
+                gameObject.AddComponent<ZoteTurret>();
+            }
+            else if (goName.Contains("Zoteling"))
+            {
+                gameObject.AddComponent<Zoteling>();
+            }
+            else if (goName.Contains("Absolute Radiance"))
+            {
+                gameObject.AddComponent<AbsoluteRadiance>();
             }
             else if (goName.Contains("Infected Knight"))
             {
@@ -102,8 +146,6 @@ namespace CustomTrial
             else if (goName.Contains("Fluke Mother"))
             {
                 gameObject.AddComponent<Flukemarm>();
-                GameObject hatcherCage = Instantiate(CustomTrial.GameObjects["Hatcher Cage (2)"]);
-                hatcherCage.SetActive(true);
             }
             else if (goName.Contains("Ghost Warrior Galien"))
             {
@@ -139,6 +181,8 @@ namespace CustomTrial
             }
             else if (goName.Contains("Grimm Boss") && !goName.Contains("Nightmare"))
             {
+                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["Grimm Spike Holder"], new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
+                spikeHolder.SetActive(true);
                 gameObject.AddComponent<TroupeMasterGrimm>();
             }
             else if (goName.Contains("Lancer"))
@@ -148,6 +192,10 @@ namespace CustomTrial
             else if (goName.Contains("Lobster"))
             {
                 gameObject.AddComponent<Lobster>();
+            }
+            else if (goName.Contains("Giant Buzzer Col"))
+            {
+                gameObject.AddComponent<VengeflyKing>();
             }
             else if (goName.Contains("Giant Fly"))
             {
@@ -163,7 +211,13 @@ namespace CustomTrial
             }
             else if (goName.Contains("Hornet Boss 1"))
             {
+                //Instantiate(CustomTrial.GameObjects["Needle"], gameObject.transform);
                 gameObject.AddComponent<HornetProtector>();
+            }
+            else if (goName.Contains("Hornet Boss 2"))
+            {
+                //Instantiate(CustomTrial.GameObjects["Needle"], gameObject.transform);
+                gameObject.AddComponent<HornetSentinel>();
             }
             else if (goName.Contains("Lost Kin"))
             {
@@ -187,6 +241,8 @@ namespace CustomTrial
             }
             else if (goName.Contains("Nightmare Grimm Boss"))
             {
+                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["Nightmare Grimm Spike Holder"], new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
+                spikeHolder.SetActive(true);
                 gameObject.AddComponent<NightmareKingGrimm>();
             }
             else if (goName.Contains("Mimic Spider"))
@@ -197,7 +253,7 @@ namespace CustomTrial
             {
                 gameObject.AddComponent<WingedNosk>();
             }
-            else if (goName.Contains("Oblobble"))
+            else if (goName.Contains("Mega Fat Bee"))
             {
                 gameObject.AddComponent<Oblobble>();
             }

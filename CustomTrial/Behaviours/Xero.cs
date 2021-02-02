@@ -1,6 +1,6 @@
-﻿using CustomTrial.Utilities;
-using HutongGames.PlayMaker.Actions;
+﻿using HutongGames.PlayMaker.Actions;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -17,6 +17,11 @@ namespace CustomTrial.Behaviours
 
         private void Start()
         {
+            for (int i = 1; i <= 4; i++)
+            {
+                gameObject.transform.Find("Sword " + i).gameObject.LocateMyFSM("xero_nail").SetState("Init");
+            }
+            
             _movement.Fsm.GetFsmVector3("P1").Value = RandomVector3();
             _movement.Fsm.GetFsmVector3("P2").Value = RandomVector3();
             _movement.Fsm.GetFsmVector3("P3").Value = RandomVector3();

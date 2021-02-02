@@ -1,6 +1,6 @@
 ﻿using System.Collections;
-using CustomTrial.Utilities;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Dialogue
 {
@@ -19,8 +19,8 @@ namespace CustomTrial.Dialogue
         {
             yield return new WaitWhile(() => HeroController.instance == null);
             
-            _pageCtrl.InsertMethod("Yes", 0, () => PlaceMark = true);
-            _pageCtrl.InsertMethod("No", 0, () => PlaceMark = false);
+            _pageCtrl.GetState("Yes").InsertMethod(0, () => PlaceMark = true);
+            _pageCtrl.GetState("No").InsertMethod(0, () => PlaceMark = false);
         }
     }
 }

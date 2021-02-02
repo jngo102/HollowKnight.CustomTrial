@@ -1,8 +1,7 @@
 ﻿using System.Collections;
-using CustomTrial.Utilities;
 using HutongGames.PlayMaker.Actions;
-using ModCommon;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -17,8 +16,6 @@ namespace CustomTrial.Behaviours
 
         private IEnumerator Start()
         {
-            gameObject.PrintSceneHierarchyTree();
-            
             _control.SetState("Init");
 
             _control.Fsm.GetFsmBool("Final Rage").Value = true;
@@ -30,22 +27,21 @@ namespace CustomTrial.Behaviours
             _control.GetAction<SetFloatValue>("Jump To R", 0).floatValue.Value = ArenaInfo.LeftX + 8;
             _control.GetAction<SetFloatValue>("Jump To R", 1).floatValue.Value = ArenaInfo.RightX;
             
-            _control.InsertMethod("Bow", 0, () => Destroy(gameObject, 3));
-            _control.InsertMethod("Stun Wait", _control.GetState("Stun Wait").Actions.Length, () => _control.SendEvent("READY"));
-            _control.InsertMethod("Grabbing", _control.GetState("Grabbing").Actions.Length, () => _control.SendEvent("GRABBED"));
+            _control.GetState("Bow").InsertMethod(0, () => Destroy(gameObject, 3));
+            _control.GetState("Stun Wait").InsertMethod(_control.GetState("Stun Wait").Actions.Length, () => _control.SendEvent("READY"));
+            _control.GetState("Grabbing").InsertMethod(_control.GetState("Grabbing").Actions.Length, () => _control.SendEvent("GRABBED"));
             
-            _control.RemoveAction<SetPolygonCollider>("Cyclone Start");
-            _control.RemoveAction("Cyclone Start", 8);
-            _control.RemoveAction<SetPolygonCollider>("Cyclone End");
-            _control.RemoveAction<SetPolygonCollider>("Stun Reset");
-            _control.RemoveAction<SetPolygonCollider>("Death Reset");
+            _control.GetState("Cyclone Start").RemoveAction<SetPolygonCollider>();
+            _control.GetState("Cyclone Start").RemoveAction(8);
+            _control.GetState("Cyclone End").RemoveAction<SetPolygonCollider>();
+            _control.GetState("Stun Reset").RemoveAction<SetPolygonCollider>();
+            _control.GetState("Death Reset").RemoveAction<SetPolygonCollider>();
             
             yield return new WaitWhile(() => _control.ActiveStateName != "Docile");
 
             GameObject spinTink = new GameObject("Spin Tink");
             var collider = spinTink.AddComponent<CircleCollider2D>();
             spinTink.AddComponent<DamageHero>();
-            spinTink.AddComponent<DebugColliders>();
             collider.isTrigger = true;
             collider.radius = 3;
             spinTink.transform.SetParent(gameObject.transform, false);

@@ -1,26 +1,23 @@
-﻿using System;
+﻿using CustomTrial.Classes;
 using CustomTrial.Dialogue;
 using Modding;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using CustomTrial.Classes;
-using CustomTrial.Utilities;
-using HutongGames.PlayMaker.Actions;
+using System.Xml.Serialization;
 using ModCommon;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Newtonsoft.Json;
 
 namespace CustomTrial
 {
-    public class CustomTrial : Mod<SaveSettings, GlobalSettings>
+    public class CustomTrial : Mod
     {
-        private string _jmlPath = Application.streamingAssetsPath + "\\CustomTrial.WaveSequence.jml";
-        
+        private static readonly string _xmlDir = Application.dataPath + "/Managed/Mods/CustomTrial";
+        private static readonly string _xmlPath = Path.Combine(_xmlDir, "WaveSequence.xml");
+
         public static Dictionary<string, GameObject> GameObjects = new Dictionary<string, GameObject>();
+        public static List<GameObject> Crowds = new List<GameObject>();
 
         private Dictionary<string, (string, string)> _preloadDictionary = new Dictionary<string, (string, string)>
         {
@@ -54,7 +51,7 @@ namespace CustomTrial
             ["Carver Hatcher"] = ("Deepnest_26b", "Centipede Hatcher (4)"),
             ["Stalking Devout"] = ("Deepnest_34", "Slash Spider"),
             ["Deephunter"] = ("Deepnest_34", "Spider Mini"),
-            ["Corpse Crawler"] = ("Deepnest_34", "Zombie Hornhead Sp"),
+            ["Corpse Creeper"] = ("Deepnest_34", "Zombie Hornhead Sp"),
             ["Grub Mimic"] = ("Deepnest_36", "Grub Mimic Top"),
             ["Little Weaver"] = ("Deepnest_41", "Spider Flyer"),
             ["Deepling"] = ("Deepnest_41", "Tiny Spider"),
@@ -86,12 +83,12 @@ namespace CustomTrial
             ["Mossfly"] = ("Fungus3_22", "Moss Flyer (3)"),
             ["Loodle"] = ("Fungus3_48", "Grass Hopper"),
             ["Aluba"] = ("Fungus3_48", "Lazy Flyer Enemy"),
-            ["Ooma"] = ("Fungus3_25b", "Jellyfish"),
-            ["Uoma"] = ("Fungus3_25b", "Jellyfish Baby"),
+            ["Ooma"] = ("Fungus3_27", "Jellyfish"),
+            ["Uoma"] = ("Fungus3_27", "Jellyfish Baby"),
             ["Fool Eater"] = ("Fungus3_48", "Plant Trap"),
             ["Flukemunga"] = ("GG_Pipeway", "Fat Fluke"),
             ["Hiveling"] = ("Hive_03", "Bee Hatchling Ambient (22)"),
-            ["Hive Soldier"] = ("Hive_03", "Bee Stinger (10)"),
+            ["Hive Soldier"] = ("Hive_03", "Bee Stinger (8)"),
             ["Hive Guardian"] = ("Hive_03", "Big Bee (2)"),
             ["Husk Hive"] = ("Hive_01", "Zombie Hive"),
             ["Glimback"] = ("Mines_07", "Crystal Crawler"),
@@ -121,10 +118,19 @@ namespace CustomTrial
             ["Wingmould"] = ("White_Palace_01", "White Palace Fly"),
             ["Royal Retainer"] = ("White_Palace_03_hub", "Enemy"),
             ["Kingsmould"] = ("White_Palace_11", "Royal Gaurd"),
-            
+            ["Volatile Zoteling"] = ("GG_Mighty_Zote", "Battle Control/Zote Balloon Ordeal"),
+            ["Zoteling"] = ("GG_Mighty_Zote", "Battle Control/Zotelings/Ordeal Zoteling"),
+            ["Fat Zote"] = ("GG_Mighty_Zote", "Battle Control/Fat Zotes/Zote Crew Fat (1)"),
+            ["Tall Zote"] = ("GG_Mighty_Zote", "Battle Control/Tall Zotes/Zote Crew Tall"),
+            ["Zote Salubra"] = ("GG_Mighty_Zote", "Battle Control/Zote Salubra"),
+            ["Zote the Mighty"] = ("GG_Mighty_Zote", "Battle Control/Dormant Warriors/Zote Crew Normal (1)"),
+            ["Zote Turret"] = ("GG_Mighty_Zote", "Battle Control/Extra Zotes/Zote Turret"),
+            ["Zote Fluke"] = ("GG_Mighty_Zote", "Battle Control/Zote Fluke"),
+            ["Zote Thwomp"] = ("GG_Mighty_Zote", "Battle Control/Zote Thwomp"),
+
             ["Broken Vessel"] = ("GG_Broken_Vessel", "Infected Knight"),
             ["Brooding Mawlek"] = ("GG_Brooding_Mawlek", "Battle Scene/Mawlek Body"),
-            ["The Collector"] = ("GG_Collector", "Battle Scene/Jar Collector"),
+            ["The Collector"] = ("GG_Collector_V", "Battle Scene/Jar Collector"),
             ["Crystal Guardian"] = ("GG_Crystal_Guardian", "Mega Zombie Beam Miner (1)"),
             ["Enraged Guardian"] = ("GG_Crystal_Guardian_2", "Battle Scene/Zombie Beam Miner Rematch"),
             ["Dung Defender"] = ("GG_Dung_Defender", "Dung Defender"),
@@ -142,11 +148,14 @@ namespace CustomTrial
             ["Lobster"] = ("GG_God_Tamer", "Entry Object/Lobster"),
             ["Grey Prince Zote"] = ("GG_Grey_Prince_Zote", "Grey Prince"),
             ["Troupe Master Grimm"] = ("GG_Grimm", "Grimm Scene/Grimm Boss"),
+            ["Grimm Spike Holder"] = ("GG_Grimm", "Grimm Spike Holder"),
             ["Nightmare King Grimm"] = ("GG_Grimm_Nightmare", "Grimm Control/Nightmare Grimm Boss"),
+            ["Nightmare Grimm Spike Holder"] = ("GG_Grimm_Nightmare", "Grimm Spike Holder"),
             ["Gruz Mother"] = ("GG_Gruz_Mother", "_Enemies/Giant Fly"),
             ["Hive Knight"] = ("GG_Hive_Knight", "Battle Scene/Hive Knight"),
             ["Pure Vessel"] = ("GG_Hollow_Knight", "Battle Scene/HK Prime"),
             ["Hornet Protector"] = ("GG_Hornet_1", "Boss Holder/Hornet Boss 1"),
+            ["Needle"] = ("GG_Hornet_1", "Boss Holder/Hornet Boss 1/Needle"),
             ["Hornet Sentinel"] = ("GG_Hornet_2", "Boss Holder/Hornet Boss 2"),
             ["Lost Kin"] = ("GG_Lost_Kin", "Lost Kin"),
             ["Pale Lurker"] = ("GG_Lurker", "Lurker Control/Pale Lurker"),
@@ -167,7 +176,7 @@ namespace CustomTrial
             ["Uumuu"] = ("GG_Uumuu", "Mega Jellyfish GG"),
             ["Jellyfish Spawner"] = ("GG_Uumuu", "Jellyfish Spawner"),
             ["Mega Jellyfish Multizaps"] = ("GG_Uumuu", "Mega Jellyfish Multizaps"),
-            ["Hatcher Cage (2)"] = ("GG_Flukemarm", "Hatcher Cage (2)"),
+            ["Hatcher Cage"] = ("GG_Flukemarm", "Hatcher Cage (2)"),
             ["Vengefly King"] = ("GG_Vengefly", "Giant Buzzer Col"),
             ["Watcher Knight"] = ("GG_Watcher_Knights", "Battle Control/Black Knight 1"),
             ["White Defender"] = ("GG_White_Defender", "White Defender"),
@@ -179,7 +188,7 @@ namespace CustomTrial
             ["Grimmkin Nightmare"] = ("Hive_03", "Flamebearer Spawn"),
         };
         
-        public static BattleControl battleControl = new BattleControl();
+        public static BattleControl BattleControl = new BattleControl();
         public static CustomTrial Instance { get; private set; }
 
         public override string GetVersion()
@@ -189,43 +198,97 @@ namespace CustomTrial
         
         private List<(string, string)> GetEnemyPreloads()
         {
-            // This implementation is so bad it makes me want to die
-            List<string> text = File.ReadAllLines(_jmlPath).ToList();
-            List<string> goNames = new List<string>();
-            foreach (string line in text)
+            if (!Directory.Exists(_xmlDir))
             {
-                string trimmedLine = line.Trim(' ');
-                if (trimmedLine == "\\" || trimmedLine == "true" || trimmedLine == "false" || trimmedLine.StartsWith("#") || char.IsDigit(trimmedLine[0]))
-                {
-                    continue;
-                }
-                
-                string goName = trimmedLine.Split(',')[0];
-                Log("GameObject Name: " + goName);
-                if (!goNames.Contains(goName))
-                {
-                    switch (goName)
-                    {
-                        case "Flukemarm":
-                            goNames.Add("Hatcher Cage (2)");
-                            break;
-                        case "Uumuu":
-                            goNames.Add("Jellyfish Spawner");
-                            goNames.Add("Mega Jellyfish Multizaps");
-                            break;
-                    }
-                    
-                    goNames.Add(goName);
-                }
+                Log("Creating CustomTrial/ directory");
+                Directory.CreateDirectory(_xmlDir);
             }
-            
-            List<(string, string)> preloads = new List<(string, string)>();
-            
-            foreach (string goName in goNames)
+
+            XmlSerializer serializer = new XmlSerializer(typeof(BattleControl));
+            if (!File.Exists(_xmlPath))
             {
-                if (_preloadDictionary.Keys.Contains(goName))
+                Log("Creating WaveSequence.xml");
+                Wave exampleWave1 = new Wave(
+                    new List<Enemy>
+                    {
+                        new Enemy("Primal Aspid", 50, new Vector2(90, 10)),
+                        new Enemy("Great Hopper", 100, new Vector2(110, 10)),
+                    },
+                    new List<Vector2> { new Vector2(100, 10) },
+                    "Cheer",
+                    "1",
+                    1.0f,
+                    0.0f,
+                    0.0f,
+                    0.0f,
+                    0.0f,
+                    false);
+                Wave exampleWave2 = new Wave(
+                    new List<Enemy>
+                    {
+                        new Enemy("Flukemunga", 200, new Vector2(94, 8)), 
+                        new Enemy("Obble", 350, new Vector2(95, 10)),
+                        new Enemy("Ooma", 1, new Vector2(110, 12)),
+                    },
+                    new List<Vector2> { new Vector2(100, 10) },
+                    "Laugh",
+                    "5",
+                    1.0f,
+                    1.0f,
+                    10.0f,
+                    10.0f,
+                    10.0f,
+                    true);
+                BattleControl = new BattleControl();
+                BattleControl.AddWave(exampleWave1);
+                BattleControl.AddWave(exampleWave2);
+                StreamWriter writer = new StreamWriter(_xmlPath);
+                serializer.Serialize(writer.BaseStream, BattleControl);
+                writer.Close();
+            }
+
+            FileStream stream = new FileStream(_xmlPath, FileMode.OpenOrCreate);
+            StreamReader reader = new StreamReader(stream);
+            BattleControl = (BattleControl)serializer.Deserialize(reader);
+            BattleControl.AddWave(new Wave());
+
+            List<(string, string)> preloads = new List<(string, string)>();
+            foreach (Wave wave in BattleControl.Waves)
+            {
+                foreach (Enemy enemy in wave.Enemies)
                 {
-                    preloads.Add(_preloadDictionary[goName]);
+                    if (!preloads.Contains(_preloadDictionary[enemy.Name]))
+                    {
+                        preloads.Add(_preloadDictionary[enemy.Name]);
+                        GameObjects.Add(enemy.Name, null);
+                    }
+                    if (enemy.Name.Contains("Flukemarm") && !GameObjects.ContainsKey("Hatcher Cage"))
+                    {
+                        preloads.Add(_preloadDictionary["Hatcher Cage"]);
+                        GameObjects.Add("Hatcher Cage", null);
+                    }
+                    else if (enemy.Name.Contains("Hornet") && !GameObjects.ContainsKey("Needle"))
+                    {
+                        //preloads.Add(_preloadDictionary["Needle"]);
+                        //GameObjects.Add("Needle", null);
+                    }
+                    else if (enemy.Name.Contains("Uumuu") && !GameObjects.ContainsKey("Jellyfish Spawner") && !GameObjects.ContainsKey("Mega Jellyfish Multizaps"))
+                    {
+                        preloads.Add(_preloadDictionary["Jellyfish Spawner"]);
+                        GameObjects.Add("Jellyfish Spawner", null);
+                        preloads.Add(_preloadDictionary["Mega Jellyfish Multizaps"]);
+                        GameObjects.Add("Mega Jellyfish Multizaps", null);
+                    }
+                    else if (enemy.Name.Contains("Troupe Master Grimm") && !GameObjects.ContainsKey("Grimm Spike Holder"))
+                    {
+                        preloads.Add(_preloadDictionary["Grimm Spike Holder"]);
+                        GameObjects.Add("Grimm Spike Holder", null);
+                    }
+                    else if (enemy.Name.Contains("Nightmare King Grimm") && !GameObjects.ContainsKey("Nightmare Grimm Spike Holder"))
+                    {
+                        preloads.Add(_preloadDictionary["Nightmare Grimm Spike Holder"]);
+                        GameObjects.Add("Nightmare Grimm Spike Holder", null);
+                    }
                 }
             }
 
@@ -235,150 +298,35 @@ namespace CustomTrial
         public override List<(string, string)> GetPreloadNames()
         {
             List<(string, string)> preloads = GetEnemyPreloads();
-            preloads.Add(("Room_Colosseum_Gold", "Colosseum Manager/Waves/Wave 4/Colosseum Cage Large"));
-            preloads.Add(("Room_Colosseum_Gold", "Colosseum Manager/Waves/Wave 4/Colosseum Cage Small"));
-            preloads.Add(("Room_Colosseum_Gold", "Colosseum Manager/Waves/Arena 1/Colosseum Platform"));
 
-            Log("Returning Preloads");
             return preloads;
-            
-            /*return new List<(string, string)>
-            {
-                ("Room_Colosseum_Gold", "Colosseum Manager/Waves/Wave 4/Colosseum Cage Large"),
-                ("Room_Colosseum_Gold", "Colosseum Manager/Waves/Wave 4/Colosseum Cage Small"),
-                ("Room_Colosseum_Gold", "Colosseum Manager/Waves/Arena 1/Colosseum Platform"),
-            };*/
         }
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
-            // Environment
-            GameObjects.Add("Large Cage", preloadedObjects["Room_Colosseum_Gold"]["Colosseum Manager/Waves/Wave 4/Colosseum Cage Large"]);
-            GameObjects.Add("Small Cage", preloadedObjects["Room_Colosseum_Gold"]["Colosseum Manager/Waves/Wave 4/Colosseum Cage Small"]);
-            GameObjects.Add("Platform", preloadedObjects["Room_Colosseum_Gold"]["Colosseum Manager/Waves/Arena 1/Colosseum Platform"]);
-            
             // Enemies
-            List<string> txt = File.ReadAllLines(_jmlPath).ToList();
-            List<string> goNames = new List<string>();
-            foreach (string line in txt)
+            Dictionary<string, GameObject> gameObjects = new Dictionary<string, GameObject>();
+            foreach (KeyValuePair<string, GameObject> pair in GameObjects)
             {
-                string trimmedLine = line.Trim(' ');
-                if (trimmedLine.StartsWith("#"))
-                {
-                    continue;
-                }
-                
-                if (trimmedLine != "\\" && trimmedLine != "true" && trimmedLine != "false" && !char.IsDigit(trimmedLine[0]))
-                {
-                    string goName = trimmedLine.Split(',')[0];
-                    if (!goNames.Contains(goName))
-                    {
-                        switch (goName)
-                        {
-                            case "Flukemarm":
-                                goNames.Add("Hatcher Cage (2)");
-                                break;
-                            case "Uumuu":
-                                goNames.Add("Jellyfish Spawner");
-                                goNames.Add("Mega Jellyfish Multizaps");
-                                break;
-                        }
-                        goNames.Add(goName);
-                    }
-                }
-            }
-
-            foreach (string goName in goNames)
-            {
+                string goName = pair.Key;
                 if (_preloadDictionary.Keys.Contains(goName))
                 {
-                    (string, string) preloadTuple = _preloadDictionary[goName];
-                    Log("Scene: " + preloadTuple.Item1 + ", GameObject: " + preloadTuple.Item2);
-                    GameObject gameObject = preloadedObjects[preloadTuple.Item1][preloadTuple.Item2];
+                    (string sceneName, string enemyPath) = _preloadDictionary[goName];
+                    GameObject gameObject = preloadedObjects[sceneName][enemyPath];
                     if (goName.Contains("Grimmkin"))
                     {
                         gameObject = gameObject.LocateMyFSM("Spawn Control").Fsm.GetFsmGameObject("Grimmkin Obj").Value;
                     }
-                    GameObjects.Add(goName, gameObject);   
+                    gameObjects.Add(goName, gameObject);
                 }
+            }
+
+            foreach (KeyValuePair<string, GameObject> pair in gameObjects)
+            {
+                GameObjects[pair.Key] = pair.Value;
             }
 
             Instance = this;
-            
-            // This implementation is so bad it makes me want to die
-            List<string> text = File.ReadAllLines(_jmlPath).ToList();
-            Wave newWave = null;
-            foreach (string line in text)
-            {
-                Log("Line: " + line);
-                string trimmedLine = line.Trim(' ');
-                if (trimmedLine.StartsWith("#"))
-                {
-                    continue;
-                }
-                
-                if (trimmedLine == "\\")
-                {
-                    if (newWave != null)
-                    {
-                        battleControl.Waves.Add(newWave);
-                        Log("Done");
-                    }
-
-                    Log("Creating new wave");
-                    newWave = new Wave();
-                }
-                else if (trimmedLine == "false" || trimmedLine == "true")
-                {
-                    Log("Adding Spikes bool: " + bool.Parse(trimmedLine));
-                    newWave.Spikes = bool.Parse(trimmedLine);
-                }
-                else if (char.IsDigit(trimmedLine[0]))
-                {
-                    Log("Adding Cooldown: " + trimmedLine);
-                    newWave.Cooldown = float.Parse(trimmedLine);
-                }
-                else if (trimmedLine.StartsWith("Wall"))
-                {
-                    List<string> parameters = trimmedLine.Split(',').ToList();
-                    string wall = parameters[0];
-                    float distance = float.Parse(parameters[1]);
-                    switch (wall)
-                    {
-                        case "Wall C":
-                            Log("Adding Distance " + distance + " to Wall C");
-                            newWave.WallCDistance = distance;
-                            break;
-                        case "Wall L":
-                            Log("Adding Distance " + distance + " to Wall L");
-                            newWave.WallLDistance = distance;
-                            break;
-                        case "Wall R":
-                            Log("Adding Distance " + distance + " to Wall R");
-                            newWave.WallRDistance = distance;
-                            break;
-                    }
-                }
-                else
-                {
-                    List<string> parameters = trimmedLine.Split(',').ToList();
-                    string goName = parameters[0];
-                    float spawnX = float.Parse(parameters[1]);
-                    float spawnY = float.Parse(parameters[2]);
-                    Vector2 spawnPos = new Vector2(spawnX, spawnY);
-                    if (goName == "Platform")
-                    {
-                        Log("Adding to Platforms");
-                        newWave.PlatformSpawn.Add(spawnPos);
-                    }
-                    else
-                    {
-                        Log("Adding enemy " + goName + " at " + spawnPos);
-                        newWave.Enemies.Add(goName);
-                        newWave.EnemySpawn.Add(spawnPos);
-                    }
-                }
-            }
 
             Log("Finished Initialization");
             
@@ -408,6 +356,12 @@ namespace CustomTrial
             }
             else if (nextScene.name == "Room_Colosseum_Gold")
             {
+                Crowds.Clear();
+                foreach (GameObject crowd in GameObject.FindObjectsOfType<GameObject>()
+                    .Where(go => go.name.Contains("Colosseum Crowd NPC")))
+                {
+                    Crowds.Add(crowd);
+                }
                 GameObject.Find("Colosseum Manager").AddComponent<ColosseumManager>();
             }
         }

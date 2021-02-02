@@ -1,15 +1,17 @@
 ﻿using System.Collections;
+using HutongGames.PlayMaker;
+using HutongGames.PlayMaker.Actions;
+using ModCommon;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
     public class WhiteDefender : MonoBehaviour
     {
-        private const float GroundY = 6.4f;
-        
         private PlayMakerFSM _constrainX;
         private PlayMakerFSM _dd;
-        
+
         private void Awake()
         {
             _constrainX = gameObject.LocateMyFSM("Constrain X");
@@ -19,8 +21,13 @@ namespace CustomTrial.Behaviours
         private IEnumerator Start()
         {
             _dd.SetState("Init");
-            
-            yield return new WaitWhile(() => _dd.ActiveStateName != "Sleep");
+
+            foreach (Transform pillarTransform in gameObject.transform.Find("Slam Pillars"))
+            {
+                GameObject dungPillar = pillarTransform.gameObject;
+                PlayMakerFSM pillarCtrl = dungPillar.LocateMyFSM("Control");
+                pillarCtrl.GetAction<SetDamageHeroAmount>("Init").damageDealt = 1;
+            }
 
             _constrainX.Fsm.GetFsmFloat("Edge L").Value = ArenaInfo.LeftX;
             _constrainX.Fsm.GetFsmFloat("Edge R").Value = ArenaInfo.RightX;
@@ -28,13 +35,39 @@ namespace CustomTrial.Behaviours
             _dd.Fsm.GetFsmFloat("Centre X").Value = ArenaInfo.CenterX;
             _dd.Fsm.GetFsmFloat("Dolphin Max X").Value = ArenaInfo.RightX - 4 ;
             _dd.Fsm.GetFsmFloat("Dolphin Min X").Value = ArenaInfo.LeftX + 4;
-            _dd.Fsm.GetFsmFloat("Erupt Y").Value = GroundY;
+            _dd.Fsm.GetFsmFloat("Erupt Y").Value = ArenaInfo.BottomY;
             _dd.Fsm.GetFsmFloat("Max X").Value = ArenaInfo.RightX;
             _dd.Fsm.GetFsmFloat("Min X").Value = ArenaInfo.LeftX;
-            
-            _dd.SetState("Will Evade?");
-            
-            Destroy(GameObject.Find("Dream Fall Catcher"));
+
+            _dd.GetState("Roar?").RemoveAction<SendEventByName>();
+            _dd.GetState("Roar?").RemoveAction<SetFsmGameObject>();
+            _dd.GetState("Rage Roar").RemoveAction<SendEventByName>();
+            _dd.GetState("Rage Roar").RemoveAction<SetFsmGameObject>();
+            _dd.GetState("Init").RemoveAction<GetPlayerDataInt>();
+
+            for (int i = 16; i <= 43; i += 3)
+            {
+                _dd.GetAction<SetDamageHeroAmount>("Erupt Out", i).damageDealt = 1;
+            }
+            _dd.GetAction<SetDamageHeroAmount>("Init 2", 1).damageDealt = 1;
+            _dd.GetAction<SetDamageHeroAmount>("Init 2", 2).damageDealt = 1;
+            _dd.GetAction<SetDamageHeroAmount>("Pillar", 2).damageDealt = 1;
+            _dd.GetAction<SetDamageHeroAmount>("Pillar", 6).damageDealt = 1;
+            _dd.GetAction<SetDamageHeroAmount>("Throw 1").damageDealt = 1;
+
+            GetComponent<DamageHero>().damageDealt = 1;
+            GameObject corpse = Mirror.GetField<EnemyDeathEffects, GameObject>(
+                GetComponent<EnemyDeathEffectsUninfected>(),
+                "corpse");
+            FsmState blowState = corpse.LocateMyFSM("Control").GetState("Blow 2");
+            blowState.InsertMethod(blowState.Actions.Length, () => Destroy(corpse));
+
+            yield return new WaitUntil(() => _dd.ActiveStateName == "Sleep");
+
+            GetComponent<HealthManager>().IsInvincible = false;
+
+            _dd.SetState("After Evade");
+            _dd.Fsm.GetFsmInt("Damage").Value = 1;
         }
     }
 }

@@ -1,17 +1,19 @@
 ﻿using System.Collections;
-using CustomTrial.Utilities;
 using HutongGames.PlayMaker.Actions;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
     public class BrokenVessel : MonoBehaviour
     {
         private PlayMakerFSM _control;
+        private PlayMakerFSM _spawn;
 
         private void Awake()
         {
             _control = gameObject.LocateMyFSM("IK Control");
+            _spawn = gameObject.LocateMyFSM("Spawn Balloon");
         }
 
         private IEnumerator Start()
@@ -23,21 +25,19 @@ namespace CustomTrial.Behaviours
             _control.Fsm.GetFsmFloat("Min Dstab Height").Value = ArenaInfo.BottomY + 5;
             _control.Fsm.GetFsmFloat("Right X").Value = ArenaInfo.RightX;
 
-            _control.GetAction<RandomFloat>("Aim Jump 2").min.Value = ArenaInfo.CenterX - 1;
-            _control.GetAction<RandomFloat>("Aim Jump 2").max.Value = ArenaInfo.CenterX + 1;
+            _control.GetAction<RandomFloat>("Aim Jump 2").min = ArenaInfo.CenterX - 1;
+            _control.GetAction<RandomFloat>("Aim Jump 2").max = ArenaInfo.CenterX + 1;
             _control.GetAction<SetPosition>("Set Pos").x = transform.position.x;
-            _control.GetAction<SetPosition>("Set Pos").x = transform.position.y;
+            _control.GetAction<SetPosition>("Set Pos").y = transform.position.y;
 
-            yield return new WaitWhile(() => _control.ActiveStateName != "Intro Fall" && _control.ActiveStateName != "Waiting");
+            _spawn.Fsm.GetFsmFloat("X Min").Value = ArenaInfo.LeftX + 1;
+            _spawn.Fsm.GetFsmFloat("X Max").Value = ArenaInfo.RightX - 1;
+            _spawn.Fsm.GetFsmFloat("Y Min").Value = ArenaInfo.BottomY + 1;
+            _spawn.Fsm.GetFsmFloat("Y Max").Value = ArenaInfo.BottomY + 5;
 
-            GetComponent<MeshRenderer>().enabled = true;
-            
+            yield return new WaitUntil(() => _control.ActiveStateName == "Intro Fall");
+
             _control.SetState("Roar End");
-        }
-
-        private void Update()
-        {
-            Modding.Logger.Log("IK Control State: " + _control.ActiveStateName + " " + transform.position);
         }
     }
 }

@@ -1,37 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using CustomTrial.Classes;
-using CustomTrial.Utilities;
+﻿using CustomTrial.Classes;
 using HutongGames.PlayMaker.Actions;
-using ModCommon;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial
 {
     public class ColosseumManager : MonoBehaviour
     {
-        private List<Wave> _waves = new List<Wave>();
         private List<Vector2> _platPos = new List<Vector2>();
         private List<GameObject> _platforms = new List<GameObject>();
+
+        private Dictionary<string, GameObject> _queuedEnemies = new Dictionary<string, GameObject>();
         
         private PlayMakerFSM _battleCtrl;
         private PlayMakerFSM _manager;
+        private PlayMakerFSM _crowdAudioCtrl;
+        private PlayMakerFSM _musicCtrl;
 
         private GameObject _groundSpikes;
         private GameObject _respawnPlat;
-        
+
         private void Awake()
         {
             _battleCtrl = gameObject.LocateMyFSM("Battle Control");
             _manager = gameObject.LocateMyFSM("Manager");
+            _crowdAudioCtrl = gameObject.transform.Find("Crowd Audio").gameObject.LocateMyFSM("Control");
+            _musicCtrl = gameObject.transform.Find("Music Control").gameObject.LocateMyFSM("Control");
         }
 
         private IEnumerator Start()
         {
-            GameObject waves = gameObject.FindGameObjectInChildren("Waves");
-            _respawnPlat = waves.FindGameObjectInChildren("Respawn Plat");
+            CustomTrial.GameObjects["Large Cage"] = Instantiate(gameObject.transform.Find("Waves/Wave 4/Colosseum Cage Large").gameObject);
+            CustomTrial.GameObjects["Small Cage"] = Instantiate(gameObject.transform.Find("Waves/Wave 4/Colosseum Cage Small").gameObject);
+            CustomTrial.GameObjects["Platform"] = Instantiate(gameObject.transform.Find("Waves/Arena 1/Colosseum Platform").gameObject);
+
+            GameObject waves = gameObject.transform.Find("Waves").gameObject;
+            _respawnPlat = waves.transform.Find("Respawn Plat").gameObject;
             _respawnPlat.SetActive(true);
-            GameObject respawnPlatform = _respawnPlat.FindGameObjectInChildren("Respawn Platform");
+            GameObject respawnPlatform = _respawnPlat.transform.Find("Respawn Platform").gameObject;
             respawnPlatform.LocateMyFSM("Control").SetState("Init");
             foreach (Transform childTransform in waves.transform)
             {
@@ -52,8 +60,21 @@ namespace CustomTrial
                 }
             }
 
-            _groundSpikes = gameObject.FindGameObjectInChildren("Ground Spikes");
-            GameObject spike = _groundSpikes.FindGameObjectInChildren("Colosseum Spike (19)");
+            for (int i = 0; i < CustomTrial.BattleControl.Waves.Count; i++)
+            {
+                Wave wave = CustomTrial.BattleControl.Waves[i];
+                for (int j = 0; j < wave.Enemies.Count; j++)
+                {
+                    Enemy enemy = wave.Enemies[j];
+
+                    GameObject spawnedEnemy = SpawnEnemy(enemy.Name, enemy.SpawnPosition);
+                    spawnedEnemy.GetComponent<HealthManager>().hp = enemy.Health;
+                    _queuedEnemies.Add($"{i}:{enemy.Name}:{j}", spawnedEnemy);
+                }
+            }
+
+            _groundSpikes = gameObject.transform.Find("Ground Spikes").gameObject;
+            GameObject spike = _groundSpikes.transform.Find("Colosseum Spike (19)").gameObject;
             PlayMakerFSM damagesEnemy = spike.LocateMyFSM("damages_enemy");
             damagesEnemy.Fsm.GetFsmInt("damageDealt").Value = 0;
             
@@ -66,17 +87,24 @@ namespace CustomTrial
         private IEnumerator StartWaves()
         {    
             Log("Start Waves");
-            foreach (Wave wave in CustomTrial.battleControl.Waves)
+            for (int i = 0; i < CustomTrial.BattleControl.Waves.Count; i++)
             {
+                Wave wave = CustomTrial.BattleControl.Waves[i];
+                foreach (GameObject crowd in CustomTrial.Crowds)
+                {
+                    crowd.LocateMyFSM("Control").SendEvent("CROWD IDLE");
+                }
+                _crowdAudioCtrl.SendEvent("CROWD IDLE");
+
+                _musicCtrl.SendEvent("MUSIC " + wave.MusicLevel);
+
                 EnemyCount = 0;
                 
-                PlayMakerFSM spawn = null;
+                PlayMakerFSM spawn;
 
                 yield return new WaitForSeconds(wave.Cooldown);
 
                 List<Vector2> newPlats = new List<Vector2>();
-                    
-                Log("Platform Spawn");
                 foreach (Vector2 platSpawn in wave.PlatformSpawn)
                 {
                     newPlats.Add(platSpawn);
@@ -96,10 +124,9 @@ namespace CustomTrial
                         _platforms.Add(platform);
                     }
                 }
-                
+
                 List<Vector2> platPosToRemove = new List<Vector2>();
-                
-                Log("Finding Platforms to Remove");
+
                 foreach (Vector2 platPos in _platPos)
                 {
                     if (!newPlats.Contains(platPos))
@@ -108,18 +135,15 @@ namespace CustomTrial
                     }
                 }
 
-                Log("Removing Platforms");
                 foreach (Vector2 platPos in platPosToRemove)
                 {
                     RetractPlatform(platPos);
                 }
 
-                Log("Finding Walls");
-                GameObject wallC = gameObject.FindGameObjectInChildren("Colosseum Wall C");
-                GameObject wallL = gameObject.FindGameObjectInChildren("Colosseum Wall L");
-                GameObject wallR = gameObject.FindGameObjectInChildren("Colosseum Wall R");
+                GameObject wallC = gameObject.transform.Find("Walls/Colosseum Wall C").gameObject;
+                GameObject wallL = gameObject.transform.Find("Walls/Colosseum Wall L").gameObject;
+                GameObject wallR = gameObject.transform.Find("Walls/Colosseum Wall R").gameObject;
 
-                Log("Finding Wall FSMs");
                 PlayMakerFSM wallCCtrl = wallC.LocateMyFSM("Control");
                 PlayMakerFSM wallLCtrl = wallL.LocateMyFSM("Control");
                 PlayMakerFSM wallRCtrl = wallR.LocateMyFSM("Control");
@@ -128,34 +152,30 @@ namespace CustomTrial
                     wallCCtrl.Fsm.GetFsmFloat("Distance").Value = wave.WallCDistance;
                     wallCCtrl.SendEvent("MOVE");
                 }
-                
+
                 if (wave.WallLDistance >= 0.0f)
                 {
                     wallLCtrl.Fsm.GetFsmFloat("Distance").Value = wave.WallLDistance;
                     wallLCtrl.SendEvent("MOVE");
                 }
-                
+
                 if (wave.WallRDistance >= 0.0f)
                 {
                     wallRCtrl.Fsm.GetFsmFloat("Distance").Value = wave.WallRDistance;
                     wallRCtrl.SendEvent("MOVE");
                 }
 
-                Log("WaitUntils");
                 yield return new WaitUntil(() => wallCCtrl.ActiveStateName == "Idle" && wallLCtrl.ActiveStateName == "Idle" && wallRCtrl.ActiveStateName == "Idle");
 
-                Log("Setting Respawn");
-                
-                float wallCY = wallC.FindGameObjectInChildren("Wall").transform.position.y;
-                float wallLX = wallL.FindGameObjectInChildren("Wall").transform.position.x;
-                float wallRX = wallR.FindGameObjectInChildren("Wall").transform.position.x;
+                float wallCY = wallC.transform.Find("Wall").transform.position.y;
+                float wallLX = wallL.transform.Find("Wall").transform.position.x;
+                float wallRX = wallR.transform.Find("Wall").transform.position.x;
                 float xOffset = 6;
                 ArenaInfo.TopY = wallCY;
                 ArenaInfo.LeftX = wallLX;
                 ArenaInfo.RightX = wallRX;
                 ArenaInfo.CenterX = wallLX + (wallRX - wallLX) / 2.0f + xOffset;
                 ArenaInfo.CenterY = ArenaInfo.BottomY + (wallCY - ArenaInfo.BottomY) / 2.0f;
-                Log("Walls: " + ArenaInfo.LeftX + " " + ArenaInfo.RightX + " " + ArenaInfo.TopY + " " + ArenaInfo.BottomY + " " + ArenaInfo.CenterX + " " + ArenaInfo.CenterY);
                 Vector2 respawnPos = new Vector2(ArenaInfo.CenterX, ArenaInfo.CenterY);
                 _respawnPlat.transform.position = respawnPos;
                 HeroController.instance.SetHazardRespawn(respawnPos + Vector2.up * 0.2f + Vector2.left * xOffset, true);
@@ -175,41 +195,64 @@ namespace CustomTrial
                         control.SendEvent("RETRACT");
                     }
                 }
-                
-                for (int i = 0; i < wave.Enemies.Count; i++)
+
+                for (int j = 0; j < wave.Enemies.Count; j++)
                 {
-                    string enemyName = wave.Enemies[i];
-                    Vector2 enemySpawn = wave.EnemySpawn[i];
-                
-                    GameObject largeCage = Instantiate(CustomTrial.GameObjects["Large Cage"], enemySpawn, Quaternion.identity);
+                    int waveNum = i;
+                    int enemyNum = j;
+                    Enemy enemy = wave.Enemies[enemyNum];
+
+                    GameObject largeCage = Instantiate(CustomTrial.GameObjects["Large Cage"], enemy.SpawnPosition, Quaternion.identity);
                     largeCage.SetActive(true);
                     spawn = largeCage.LocateMyFSM("Spawn");
 
-                    spawn.RemoveAction<ActivateGameObject>("Spawn");
-                    spawn.InsertMethod("Spawn", 1, () => SpawnEnemy(enemyName, enemySpawn));
+                    spawn.GetState("Spawn").RemoveAction<ActivateGameObject>();
+                    spawn.GetState("Spawn").InsertMethod(1, () => _queuedEnemies[$"{waveNum}:{enemy.Name}:{enemyNum}"].SetActive(true));
                     spawn.SetState("Init");
                     spawn.SendEvent("SPAWN");
 
                     EnemyCount++;
+
+                    yield return new WaitForSeconds(wave.DelayBetweenSpawns);
                 }
 
-                yield return new WaitWhile(() =>
-                {
-                    return spawn.ActiveStateName != "End";
-                });
-
+                //yield return new WaitWhile(() => spawn.ActiveStateName != "End" && spawn != null);
                 yield return new WaitWhile(() => EnemyCount > 0);
+
+                if (wave.CrowdAction == "Cheer")
+                {
+                    foreach (GameObject crowd in CustomTrial.Crowds)
+                    {
+                        crowd.LocateMyFSM("Control").SendEvent("CROWD CHEER");
+                    }
+                    _crowdAudioCtrl.SendEvent("CROWD SHORT CHEER");
+                }
+                else if (wave.CrowdAction == "Gasp")
+                {
+                    foreach (GameObject crowd in CustomTrial.Crowds)
+                    {
+                        crowd.LocateMyFSM("Control").SendEvent("CROWD GASP");
+                    }
+                    _crowdAudioCtrl.SendEvent("CROWD GASP");
+                }
+                else if (wave.CrowdAction == "Laugh")
+                {
+                    foreach (GameObject crowd in CustomTrial.Crowds)
+                    {
+                        crowd.LocateMyFSM("Control").SendEvent("CROWD LAUGH");
+                    }
+                    _crowdAudioCtrl.SendEvent("CROWD LAUGH");
+                }
             }
 
             Log("Battle Over!");
-            
-            yield return null;
+            _manager.SendEvent("WAVES COMPLETED");
         }
         
-        private void SpawnEnemy(string enemyName, Vector2 spawnPoint)
+        private GameObject SpawnEnemy(string enemyName, Vector2 spawnPoint)
         {
             GameObject enemy = Instantiate(CustomTrial.GameObjects[enemyName], spawnPoint, Quaternion.identity);
-            enemy.SetActive(true);
+            enemy.SetActive(false);
 
             enemy.AddComponent<EnemyTracker>();
 
@@ -217,6 +260,8 @@ namespace CustomTrial
             hm.SetGeoSmall(0);
             hm.SetGeoMedium(0);
             hm.SetGeoLarge(0);
+
+            return enemy;
         }
 
         private void RetractPlatform(Vector2 platPos)

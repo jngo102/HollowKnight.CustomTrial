@@ -1,8 +1,9 @@
 ﻿using System.Collections;
-using CustomTrial.Utilities;
 using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
+using ModCommon;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -23,15 +24,16 @@ namespace CustomTrial.Behaviours
         {
             _control.Fsm.GetFsmInt("Grimmchild Level").Value = grimmchildLevel;
 
-            _control.InsertMethod("Follow", 8, () => _offset = HeroController.instance.transform.position - transform.position);
+            _control.GetState("Follow").InsertMethod(8, () => _offset = HeroController.instance.transform.position - transform.position);
+            _control.GetState("Death Start").InsertMethod(0, () => ColosseumManager.EnemyCount--);
             
-            _control.RemoveAction<ApplyMusicCue>("Explode");
-            _control.RemoveAction<ApplyMusicCue>("Music");
-            _control.RemoveAction<DistanceFlySmooth>("Follow");
-            _control.RemoveAction<GetPlayerDataInt>("Init");
+            _control.GetState("Explode").RemoveAction<ApplyMusicCue>();
+            _control.GetState("Music").RemoveAction<ApplyMusicCue>();
+            _control.GetState("Follow").RemoveAction<DistanceFlySmooth>();
+            _control.GetState("Init").RemoveAction<GetPlayerDataInt>();
 
             _control.SetState("Init");
-            
+
             yield return new WaitWhile(() => _control.ActiveStateName != "Init");
 
             _control.SendEvent("START");
@@ -42,7 +44,6 @@ namespace CustomTrial.Behaviours
         {
             if (_control.ActiveStateName == "Follow")
             {
-                Log("Offset: " + _offset);
                 transform.SetPosition2D(HeroController.instance.transform.position - _offset);
             }
         }

@@ -1,7 +1,9 @@
 ﻿using System.Collections;
-using CustomTrial.Utilities;
+using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
+using ModCommon;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -16,10 +18,8 @@ namespace CustomTrial.Behaviours
             _phaseCtrl = gameObject.LocateMyFSM("Phase Control");
         }
 
-        private IEnumerator Start()
+        private void Start()
         {
-            _control.SetState("Init");
-
             _control.Fsm.GetFsmFloat("Left X").Value = ArenaInfo.LeftX;
             _control.Fsm.GetFsmFloat("Right X").Value = ArenaInfo.RightX;
             _control.Fsm.GetFsmFloat("TeleRange Max").Value = ArenaInfo.RightX - 1;
@@ -43,17 +43,29 @@ namespace CustomTrial.Behaviours
             _control.GetAction<FloatClamp>("TelePos Dstab").maxValue.Value = ArenaInfo.RightX - 1;
             _control.GetAction<SetPosition>("TelePos Dstab").y.Value = ArenaInfo.BottomY + 6;
             
-            _control.RemoveAction<SendEventByName>("Roar");
-            _control.RemoveAction<SetFsmGameObject>("Roar");
-            _control.RemoveAction<ApplyMusicCue>("HK Decline Music");
-            _control.RemoveAction<PlayerDataBoolTest>("Long Roar End");
+            _control.GetState("Roar").RemoveAction<SendEventByName>();
+            _control.GetState("Roar").RemoveAction<SetFsmGameObject>();
+            _control.GetState("HK Decline Music").RemoveAction<ApplyMusicCue>();
+            _control.GetState("Long Roar").RemoveAction<SendEventByName>();
+            _control.GetState("Long Roar").RemoveAction<SetFsmGameObject>();
+            _control.GetState("Long Roar End").RemoveAction<PlayerDataBoolTest>();
 
-            _phaseCtrl.RemoveAction<PlayerDataBoolTest>("Set Phase 4");
-            _phaseCtrl.RemoveAction<TransitionToAudioSnapshot>("HK DECLINE 2");
-            _phaseCtrl.RemoveAction<TransitionToAudioSnapshot>("HK DECLINE 3");
-            _phaseCtrl.RemoveAction("Die", 4);
-            
-            yield return null;
+            _phaseCtrl.GetState("Set Phase 4").RemoveAction<PlayerDataBoolTest>();
+            _phaseCtrl.GetState("HK DECLINE 2").RemoveAction<TransitionToAudioSnapshot>();
+            _phaseCtrl.GetState("HK DECLINE 3").RemoveAction<TransitionToAudioSnapshot>();
+
+            GameObject corpse = gameObject.transform.Find("Boss Corpse").gameObject;
+            corpse.LocateMyFSM("Corpse").GetState("Burst").RemoveAction<SendEventByName>();
+            FsmState blowState = corpse.LocateMyFSM("Corpse").GetState("Blow");
+            blowState.InsertMethod(9, () =>
+            {
+                GameCameras.instance.StopCameraShake();
+                ColosseumManager.EnemyCount--;
+                Destroy(corpse);
+                Destroy(gameObject);
+            });
+
+            _control.SetState("Init");
         }
     }
 }

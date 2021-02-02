@@ -1,8 +1,7 @@
 ﻿using System.Collections;
-using CustomTrial.Utilities;
 using HutongGames.PlayMaker.Actions;
-using ModCommon;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Dialogue
 {
@@ -21,20 +20,19 @@ namespace CustomTrial.Dialogue
         {
             yield return new WaitWhile(() => HeroController.instance == null);
             
-            _convo.RemoveAction<SendEventByName>("Convo Choice");
-            _convo.InsertCoroutine("Convo Choice", 3, StartCustomTrial);
+            _convo.GetState("Convo Choice").RemoveAction<SendEventByName>();
+            _convo.GetState("Convo Choice").InsertCoroutine(3, StartCustomTrial);
         }
 
         private IEnumerator StartCustomTrial()
         {
             GameObject gameCameras = GameCameras.instance.gameObject;
-            GameObject dialogueManager = gameCameras.FindGameObjectInChildren("DialogueManager");
+            GameObject dialogueManager = gameCameras.transform.Find("DialogueManager").gameObject;
             PlayMakerFSM boxOpen = dialogueManager.LocateMyFSM("Box Open");
             PlayMakerFSM boxOpenYN = dialogueManager.LocateMyFSM("Box Open YN");
-            GameObject text = dialogueManager.FindGameObjectInChildren("Text");
-            GameObject textYN = dialogueManager.FindGameObjectInChildren("Text YN");
+            GameObject text = dialogueManager.transform.Find("Text").gameObject;
+            GameObject textYN = dialogueManager.transform.Find("Text YN").gameObject;
             PlayMakerFSM dialogPageCtrl = textYN.LocateMyFSM("Dialogue Page Control");
-            text.PrintSceneHierarchyTree();
             var dialogueBox = text.GetComponent<DialogueBox>();
             dialogueBox.StartConversation("CUSTOM_TRIAL_DIALOGUE", "");
 

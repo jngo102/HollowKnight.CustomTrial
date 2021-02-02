@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using HutongGames.PlayMaker.Actions;
+using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -20,6 +22,16 @@ namespace CustomTrial.Behaviours
             _movement.Fsm.GetFsmVector3("P5").Value = RandomVector3();
             _movement.Fsm.GetFsmVector3("P6").Value = RandomVector3();
             _movement.Fsm.GetFsmVector3("P7").Value = RandomVector3();
+
+            _movement.GetAction<FloatCompare>("Choose L").float2 = ArenaInfo.CenterX - 5;
+            _movement.GetAction<FloatCompare>("Choose R").float2 = ArenaInfo.CenterX + 5;
+            _movement.GetAction<FloatCompare>("Set Warp").float2 = ArenaInfo.CenterX;
+            _movement.GetAction<SetVector3XYZ>("Choose L").x = ArenaInfo.LeftX + 2;
+            _movement.GetAction<SetVector3XYZ>("Choose L").y = transform.position.y;
+            _movement.GetAction<SetVector3XYZ>("Choose R").x = ArenaInfo.RightX - 2;
+            _movement.GetAction<SetVector3XYZ>("Choose R").y = transform.position.y;
+            _movement.GetAction<SetPosition>("Return").x = ArenaInfo.CenterX;
+            _movement.GetAction<SetPosition>("Return").y = ArenaInfo.CenterY;
         }
 
         private Vector3 RandomVector3()
