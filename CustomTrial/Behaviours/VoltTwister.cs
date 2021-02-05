@@ -3,31 +3,29 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class SoulTwister : MonoBehaviour
+    public class VoltTwister : MonoBehaviour
     {
         private PlayMakerFSM _mage;
 
         private void Awake()
         {
-            _mage = gameObject.LocateMyFSM("Mage");
+            _mage = gameObject.LocateMyFSM("Electric Mage");
         }
 
         private IEnumerator Start()
         {
             _mage.SetState("Init");
-            
+
             yield return null;
             
-            //yield return new WaitUntil(() => _mage.ActiveStateName == "Sleep" || _mage.ActiveStateName == "Manual Sleep");
             GetComponent<BoxCollider2D>().enabled = true;
             GetComponent<MeshRenderer>().enabled = true;
-            
-            _mage.SetState("Idle After Tele");
+            _mage.SetState("Idle");
         }
-
+        
         private void Update()
         {
-            Modding.Logger.Log("[Mage] " + _mage.ActiveStateName);
+            Modding.Logger.Log("[Eletric Mage] " + _mage.ActiveStateName);
         }
     }
 }

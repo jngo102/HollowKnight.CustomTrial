@@ -17,11 +17,10 @@ namespace CustomTrial.Behaviours
 
         private IEnumerator Start()
         {
+            //_death.GetState("Set").InsertMethod(0, () => Destroy(gameObject, 3));
             _control.SetState("Init");
 
-            _death.GetState("Set").InsertMethod(0, () => Destroy(gameObject, 3));
-            
-            yield return new WaitWhile(() => _control.ActiveStateName != "Launch");
+            yield return new WaitUntil(() => _control.ActiveStateName == "Launch");
 
             _control.SetState("Idle");
         }

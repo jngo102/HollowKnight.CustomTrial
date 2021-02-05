@@ -31,65 +31,34 @@ namespace CustomTrial
             _musicCtrl = gameObject.transform.Find("Music Control").gameObject.LocateMyFSM("Control");
         }
 
-        public static string GetGameObjectPath(GameObject obj)
-        {
-            string path = "/" + obj.name;
-            while (obj.transform.parent != null)
-            {
-                obj = obj.transform.parent.gameObject;
-                path = "/" + obj.name + path;
-            }
-            return path;
-        }
-        
         private IEnumerator Start()
         {
-            foreach (GameObject cage in FindObjectsOfType<GameObject>().Where(go => go.name.Contains("Colosseum Cage")))
-            {
-                string goPath = GetGameObjectPath(cage);
-                GameObject enemy = cage.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy").Value;
-                if (enemy != null)
-                {
-                    Log("Enemy: " + goPath + "/" + enemy.name);
-                }
-                
-                GameObject enemyType = cage.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
-                if (enemyType != null)
-                {
-                    Log("Enemy Type: " + goPath + "/" + enemyType.name);
-                }
-                
-                GameObject corpseToInstantiate = cage.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Corpse to Instantiate").Value;
-                if (corpseToInstantiate != null)
-                {
-                    Log("Corpse to Instantiate: " + goPath + "/" + corpseToInstantiate.name);
-                }
-            }
-
             GameObject waves = gameObject.transform.Find("Waves").gameObject;
             
             // Environment
-            CustomTrial.GameObjects["Large Cage"] = Instantiate(waves.transform.Find("Wave 4/Colosseum Cage Large").gameObject);
-            CustomTrial.GameObjects["Small Cage"] = Instantiate(waves.transform.Find("Wave 4/Colosseum Cage Small").gameObject);
-            CustomTrial.GameObjects["Platform"] = Instantiate(waves.transform.Find("Arena 1/Colosseum Platform").gameObject);
+            CustomTrial.GameObjects["largecage"] = Instantiate(waves.transform.Find("Wave 4/Colosseum Cage Large").gameObject);
+            CustomTrial.GameObjects["smallcage"] = Instantiate(waves.transform.Find("Wave 4/Colosseum Cage Small").gameObject);
+            CustomTrial.GameObjects["platform"] = Instantiate(waves.transform.Find("Arena 1/Colosseum Platform").gameObject);
             
             // Enemies
-            CustomTrial.GameObjects["Armored Squit"] = waves.transform.Find("Wave 12/Colosseum Cage Small (4)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
-            CustomTrial.GameObjects["Battle Obble"] = waves.transform.Find("Wave 37/Colosseum Cage Small (3)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
-            CustomTrial.GameObjects["Belfly"] = waves.transform.Find("Wave 8/Colosseum Cage Small (4)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
-            CustomTrial.GameObjects["Death Loodle"] = waves.transform.Find("Wave 10/Colosseum Cage Small (5)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
-            CustomTrial.GameObjects["Furious Vengefly"] = waves.transform.Find("Wave 7/Colosseum Cage Small (1)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
-            CustomTrial.GameObjects["Heavy Fool"] = waves.transform.Find("Wave 1/Colosseum Cage Large").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Corpse to Instantiate").Value;
-            CustomTrial.GameObjects["Lesser Mawlek"] = waves.transform.Find("Wave 31/Colosseum Cage Large (4)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Corpse to Instantiate").Value;
-            CustomTrial.GameObjects["Mantis Petra"] = waves.transform.Find("Wave 45/Colosseum Cage Small 1").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
-            CustomTrial.GameObjects["Mantis Traitor"] = waves.transform.Find("Wave 20/Colosseum Cage Large (5)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Corpse to Instantiate").Value;
-            CustomTrial.GameObjects["Primal Aspid"] = waves.transform.Find("Wave 17/Colosseum Cage Small (2)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
-            CustomTrial.GameObjects["Sharp Baldur"] = waves.transform.Find("Wave 4/Colosseum Cage Small").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
-            CustomTrial.GameObjects["Sturdy Fool"] = waves.transform.Find("Wave 50/Colosseum Cage Large").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy").Value;
-            CustomTrial.GameObjects["Shielded Fool"] = waves.transform.Find("Wave 3/Colosseum Cage Large").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Corpse to Instantiate").Value;
-            CustomTrial.GameObjects["Soul Twister"] = waves.transform.Find("Wave 22/Mage").gameObject;
-            CustomTrial.GameObjects["Volt Twister"] = waves.transform.Find("Wave 25/Electric Mage New").gameObject;
-            CustomTrial.GameObjects["Winged Fool"] = waves.transform.Find("Wave 6/Colosseum Cage Large").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Corpse to Instantiate").Value;
+            CustomTrial.GameObjects["armoredsquit"] = waves.transform.Find("Wave 12/Colosseum Cage Small (4)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
+            CustomTrial.GameObjects["battleobble"] = waves.transform.Find("Wave 37/Colosseum Cage Small (3)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
+            CustomTrial.GameObjects["belfly"] = waves.transform.Find("Wave 8/Colosseum Cage Small (4)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
+            CustomTrial.GameObjects["deathloodle"] = waves.transform.Find("Wave 10/Colosseum Cage Small (5)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
+            CustomTrial.GameObjects["furiousvengefly"] = waves.transform.Find("Wave 7/Colosseum Cage Small (1)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
+            CustomTrial.GameObjects["heavyfool"] = waves.transform.Find("Wave 1/Colosseum Cage Large").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Corpse to Instantiate").Value;
+            CustomTrial.GameObjects["lancer"] = waves.transform.Find("Lobster Lancer/Entry Object/Lancer").gameObject;
+            CustomTrial.GameObjects["lessermawlek"] = waves.transform.Find("Wave 31/Colosseum Cage Large (4)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Corpse to Instantiate").Value;
+            CustomTrial.GameObjects["lobster"] = waves.transform.Find("Lobster Lancer/Entry Object/Lobster").gameObject;
+            CustomTrial.GameObjects["mantispetra"] = waves.transform.Find("Wave 45/Colosseum Cage Small 1").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
+            CustomTrial.GameObjects["mantistraitor"] = waves.transform.Find("Wave 20/Colosseum Cage Large (5)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Corpse to Instantiate").Value;
+            CustomTrial.GameObjects["primalaspid"] = waves.transform.Find("Wave 17/Colosseum Cage Small (2)").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
+            CustomTrial.GameObjects["sharpbaldur"] = waves.transform.Find("Wave 4/Colosseum Cage Small").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy Type").Value;
+            CustomTrial.GameObjects["sturdyfool"] = waves.transform.Find("Wave 50/Colosseum Cage Large").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Enemy").Value;
+            CustomTrial.GameObjects["shieldedfool"] = waves.transform.Find("Wave 3/Colosseum Cage Large").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Corpse to Instantiate").Value;
+            CustomTrial.GameObjects["soultwister"] = waves.transform.Find("Wave 22/Mage").gameObject;
+            CustomTrial.GameObjects["volttwister"] = waves.transform.Find("Wave 25/Electric Mage New").gameObject;
+            CustomTrial.GameObjects["wingedfool"] = waves.transform.Find("Wave 6/Colosseum Cage Large").gameObject.LocateMyFSM("Spawn").Fsm.GetFsmGameObject("Corpse to Instantiate").Value;
 
             _respawnPlat = waves.transform.Find("Respawn Plat").gameObject;
             _respawnPlat.SetActive(true);
@@ -124,9 +93,13 @@ namespace CustomTrial
                 {
                     Enemy enemy = wave.Enemies[j];
 
-                    GameObject spawnedEnemy = SpawnEnemy(enemy.Name, enemy.SpawnPosition);
-                    spawnedEnemy.GetComponent<HealthManager>().hp = enemy.Health;
-                    _queuedEnemies.Add($"{i}:{enemy.Name}:{j}", spawnedEnemy);
+                    string enemyName = enemy.Name.ToLower().Replace(" ", "");
+                    GameObject spawnedEnemy = SpawnEnemy(enemyName, enemy.SpawnPosition);
+                    if (enemy.Health > 0)
+                    {
+                        spawnedEnemy.GetComponent<HealthManager>().hp = enemy.Health;   
+                    }
+                    _queuedEnemies.Add($"{i}:{enemyName}:{j}", spawnedEnemy);
                 }
             }
 
@@ -142,8 +115,7 @@ namespace CustomTrial
 
         public static int EnemyCount;
         private IEnumerator StartWaves()
-        {    
-            Log("Start Waves");
+        {
             for (int i = 0; i < CustomTrial.BattleControl.Waves.Count; i++)
             {
                 Wave wave = CustomTrial.BattleControl.Waves[i];
@@ -167,7 +139,7 @@ namespace CustomTrial
                     newPlats.Add(platSpawn);
                     if (!_platPos.Contains(platSpawn))
                     {
-                        GameObject platform = Instantiate(CustomTrial.GameObjects["Platform"], platSpawn, Quaternion.identity);
+                        GameObject platform = Instantiate(CustomTrial.GameObjects["platform"], platSpawn, Quaternion.identity);
                         platform.SetActive(true);
 
                         PlayMakerFSM platCtrl = platform.LocateMyFSM("Control");
@@ -197,9 +169,10 @@ namespace CustomTrial
                     RetractPlatform(platPos);
                 }
 
-                GameObject wallC = gameObject.transform.Find("Walls/Colosseum Wall C").gameObject;
-                GameObject wallL = gameObject.transform.Find("Walls/Colosseum Wall L").gameObject;
-                GameObject wallR = gameObject.transform.Find("Walls/Colosseum Wall R").gameObject;
+                GameObject walls = gameObject.transform.Find("Walls").gameObject;
+                GameObject wallC = walls.transform.Find("Colosseum Wall C").gameObject;
+                GameObject wallL = walls.transform.Find("Colosseum Wall L").gameObject;
+                GameObject wallR = walls.transform.Find("Colosseum Wall R").gameObject;
 
                 PlayMakerFSM wallCCtrl = wallC.LocateMyFSM("Control");
                 PlayMakerFSM wallLCtrl = wallL.LocateMyFSM("Control");
@@ -259,12 +232,13 @@ namespace CustomTrial
                     int enemyNum = j;
                     Enemy enemy = wave.Enemies[enemyNum];
 
-                    GameObject largeCage = Instantiate(CustomTrial.GameObjects["Large Cage"], enemy.SpawnPosition, Quaternion.identity);
+                    GameObject largeCage = Instantiate(CustomTrial.GameObjects["largecage"], enemy.SpawnPosition, Quaternion.identity);
                     largeCage.SetActive(true);
                     spawn = largeCage.LocateMyFSM("Spawn");
 
+                    string enemyName = enemy.Name.ToLower().Replace(" ", "");
                     spawn.GetState("Spawn").RemoveAction<ActivateGameObject>();
-                    spawn.GetState("Spawn").InsertMethod(1, () => _queuedEnemies[$"{waveNum}:{enemy.Name}:{enemyNum}"].SetActive(true));
+                    spawn.GetState("Spawn").InsertMethod(1, () => _queuedEnemies[$"{waveNum}:{enemyName}:{enemyNum}"].SetActive(true));
                     spawn.SetState("Init");
                     spawn.SendEvent("SPAWN");
 

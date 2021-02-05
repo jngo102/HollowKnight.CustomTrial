@@ -129,6 +129,7 @@
     <Compile Include="Behaviours\Uumuu.cs" />
     <Compile Include="Behaviours\VengeflyKing.cs" />
     <Compile Include="Behaviours\VolatileZoteling.cs" />
+    <Compile Include="Behaviours\VoltTwister.cs" />
     <Compile Include="Behaviours\WatcherKnight.cs" />
     <Compile Include="Behaviours\WhiteDefender.cs" />
     <Compile Include="Behaviours\WingedNosk.cs" />

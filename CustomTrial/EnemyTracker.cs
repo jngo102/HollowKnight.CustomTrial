@@ -1,4 +1,6 @@
-﻿using CustomTrial.Behaviours;
+﻿using System.Linq;
+using CustomTrial.Behaviours;
+using HutongGames.PlayMaker;
 using UnityEngine;
 
 namespace CustomTrial
@@ -55,9 +57,13 @@ namespace CustomTrial
             {
                 gameObject.AddComponent<InfectedBalloon>();
             }
-            else if (goName.Contains("Mage") && !goName.Contains("Knight") && !goName.Contains("Lord"))
+            else if (goName.Contains("Mage") && !goName.Contains("Knight") && !goName.Contains("Lord") && !goName.Contains("Electric"))
             {
                 gameObject.AddComponent<SoulTwister>();
+            }
+            else if (goName.Contains("Electric Mage"))
+            {
+                gameObject.AddComponent<VoltTwister>();
             }
             else if (goName.Contains("Moss Knight") && !goName.Contains("Fat"))
             {
@@ -181,7 +187,7 @@ namespace CustomTrial
             }
             else if (goName.Contains("Grimm Boss") && !goName.Contains("Nightmare"))
             {
-                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["Grimm Spike Holder"], new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
+                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["grimmspikeholder"], new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
                 spikeHolder.SetActive(true);
                 gameObject.AddComponent<TroupeMasterGrimm>();
             }
@@ -211,12 +217,12 @@ namespace CustomTrial
             }
             else if (goName.Contains("Hornet Boss 1"))
             {
-                //Instantiate(CustomTrial.GameObjects["Needle"], gameObject.transform);
+                //Instantiate(CustomTrial.GameObjects["needle"], gameObject.transform);
                 gameObject.AddComponent<HornetProtector>();
             }
             else if (goName.Contains("Hornet Boss 2"))
             {
-                //Instantiate(CustomTrial.GameObjects["Needle"], gameObject.transform);
+                //Instantiate(CustomTrial.GameObjects["needle"], gameObject.transform);
                 gameObject.AddComponent<HornetSentinel>();
             }
             else if (goName.Contains("Lost Kin"))
@@ -241,7 +247,7 @@ namespace CustomTrial
             }
             else if (goName.Contains("Nightmare Grimm Boss"))
             {
-                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["Nightmare Grimm Spike Holder"], new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
+                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["nightmaregrimmspikeholder"], new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
                 spikeHolder.SetActive(true);
                 gameObject.AddComponent<NightmareKingGrimm>();
             }
@@ -280,10 +286,10 @@ namespace CustomTrial
             else if (goName.Contains("Mega Jellyfish GG"))
             {
                 gameObject.AddComponent<Uumuu>();
-                GameObject jellyfishSpawner = Instantiate(CustomTrial.GameObjects["Jellyfish Spawner"], new Vector2(ArenaInfo.CenterX, ArenaInfo.CenterY), Quaternion.identity);
+                GameObject jellyfishSpawner = Instantiate(CustomTrial.GameObjects["jellyfishspawner"], new Vector2(ArenaInfo.CenterX, ArenaInfo.CenterY), Quaternion.identity);
                 jellyfishSpawner.SetActive(true);
                 jellyfishSpawner.AddComponent<JellyfishSpawner>();
-                GameObject multizaps = Instantiate(CustomTrial.GameObjects["Mega Jellyfish Multizaps"], new Vector2(ArenaInfo.CenterX, ArenaInfo.CenterY), Quaternion.identity);
+                GameObject multizaps = Instantiate(CustomTrial.GameObjects["megajellyfishmultizaps"], new Vector2(ArenaInfo.CenterX, ArenaInfo.CenterY), Quaternion.identity);
                 multizaps.SetActive(true);
             }
             else if (goName.Contains("Black Knight"))
@@ -316,7 +322,19 @@ namespace CustomTrial
             }
             else
             {
-                _fsm.SetState("Init");
+                foreach (FsmState state in _fsm.FsmStates)
+                {
+                    if (state.Name == "Init")
+                    {
+                        _fsm.SetState("Init");
+                        return;
+                    }
+                    if (state.Name == "Initialise")
+                    {
+                        _fsm.SetState("Initialise");
+                        return;
+                    }
+                }
             }
         }
     }

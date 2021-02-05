@@ -15,10 +15,20 @@ namespace CustomTrial.Behaviours
         private IEnumerator Start()
         {
             _control.SetState("Init");
+            
+            yield return new WaitForEndOfFrame();
+            //yield return new WaitUntil(() => _control.ActiveStateName == "Init");
 
-            yield return new WaitWhile(() => _control.ActiveStateName != "Dormant");
-
-            _control.SendEvent("WAKE");
+            GetComponent<Rigidbody2D>().isKinematic = false;
+            GetComponent<BoxCollider2D>().enabled = true;
+            GetComponent<PlayMakerFixedUpdate>().enabled = true;
+            _control.SetState("Idle");
         }
+
+        private void Update()
+        {
+            Modding.Logger.Log("[Lobster] " + _control.ActiveStateName);
+        }
+        
     }
 }
