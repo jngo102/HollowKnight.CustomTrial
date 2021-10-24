@@ -4,13 +4,13 @@ Allows creation of custom trials for the Colosseum of Fools.
 
 **This mod is a work in progress, and may cease development at any time. If you wish to contribute, make a pull request on the GitHub page at: https://github.com/jngo102/HollowKnight.CustomTrial**
 
-Installing custom trials:
+## Installing custom trials:
 -	Move the `CustomTrial.GlobalSettings.json` file to your game's save location.
 	Windows: `%APPDATA%\..\LocalLow\Team Cherry\Hollow Knight\`
 	MacOS: `~/Library/Application Support/unity.Team Cherry.Hollow Knight/`
 	Linux: `~/.config/unity3d/Team Cherry/Hollow Knight/`
 
-Creating custom trials:
+## Creating custom trials:
 -	Launch the game once with the custom trial mod installed. This will generate a template `CustomTrial.GlobalSettings.json` file.
 -	Using the template, enter the details of the waves of enemies that you wish to spawn. It may help to learn about the JSON format:
 	https://www.w3schools.com/js/js_json_intro.asp
@@ -32,3 +32,7 @@ Creating custom trials:
 	* Spikes: Whether spikes should appear on the ground.
 
 **NOTE: A graphical editor for creating custom trials used to be available in an attempt to make creating trials easier, but no longer exists for this version of the mod.**
+
+## Troubleshooting
+-	Issue: None of my mods loaded after installing CustomTrial, and the mod list at the top corner of the screen is gone.
+	Solution: Re-run the game one more time, or check that your global settings JSON has correct syntax using a tool like jsonlint: https://jsonlint.com/

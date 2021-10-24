@@ -10,8 +10,8 @@ namespace CustomTrial
         private List<Wave> _waves = new();
         private int _geoReward;
 
-        public List<Wave> Waves => _waves;
-        public int GeoReward => _geoReward;
+        public List<Wave> Waves { get => _waves; set => _waves = value; }
+        public int GeoReward { get => _geoReward; set => _geoReward = value; }
 
         public void SetGeoReward(int geo)
         {

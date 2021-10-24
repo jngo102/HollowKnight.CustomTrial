@@ -301,7 +301,7 @@ namespace CustomTrial
             _wallLCtrl.SendEvent("MOVE");
             _wallRCtrl.SendEvent("MOVE");
 
-            Log("Battle Over!");
+            CustomTrial.Instance.Log("Battle Over!");
             
             _manager.SendEvent("WAVES COMPLETED");
         }

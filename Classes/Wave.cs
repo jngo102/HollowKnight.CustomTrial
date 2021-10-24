@@ -20,8 +20,8 @@ namespace CustomTrial.Classes
 
         public Wave()
         {
-            Enemies = new List<Enemy>();
-            PlatformSpawn = new List<Vector2>();
+            Enemies = new();
+            PlatformSpawn = new();
             CrowdAction = "";
             MusicLevel = "SILENT";
             Cooldown = 0.0f;
@@ -44,13 +44,13 @@ namespace CustomTrial.Classes
             float wallRDistance,
             bool spikes)
         {
-            Enemies = new List<Enemy>();
+            Enemies = new();
             foreach (Enemy enemy in enemies)
             {
                 Enemies.Add(enemy);
             }
 
-            PlatformSpawn = new List<Vector2>();
+            PlatformSpawn = new();
             foreach (Vector2 platPos in platSpawn)
             {
                 PlatformSpawn.Add(platPos);

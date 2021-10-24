@@ -3,6 +3,7 @@ using Modding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,7 +21,9 @@ namespace CustomTrial
         private static GlobalSettings _globalSettings = new();
         public static GlobalSettings GlobalSettings => _globalSettings;
 
-        private Dictionary<string, (string, string)> _preloadDictionary = new Dictionary<string, (string, string)>
+        public override string GetVersion() => "0.0.0.1";
+
+        private Dictionary<string, (string, string)> _preloadDictionary = new()
         {
             ["shadowcreeper"] = ("Abyss_20", "Abyss Crawler"),
             ["infectedballoon"] = ("Abyss_20", "Parasite Balloon (6)"),
@@ -180,7 +183,7 @@ namespace CustomTrial
             ["grimmkinnightmare"] = ("Hive_03", "Flamebearer Spawn"),
         };
 
-        private List<string> _colosseumEnemies = new List<string>
+        private List<string> _colosseumEnemies = new()
         {
             "armoredsquit",
             "battleobble",
@@ -204,10 +207,10 @@ namespace CustomTrial
 
         private List<(string, string)> GetEnemyPreloads()
         {
-            if (_globalSettings.Waves.Count == 0)
+            if (!File.Exists(Path.Combine(Application.persistentDataPath, "CustomTrial.GlobalSettings.json")))
             {
                 Log("Creating example JSON.");
-                Wave exampleWave1 = new Wave(
+                Wave exampleWave1 = new(
                     new List<Enemy>
                     {
                         new Enemy("Primal Aspid", 50, new Vector2(90, 10)),
@@ -223,7 +226,7 @@ namespace CustomTrial
                     0.0f,
                     false
                 );
-                Wave exampleWave2 = new Wave(
+                Wave exampleWave2 = new(
                     new List<Enemy>
                     {
                         new Enemy("Flukemunga", 200, new Vector2(94, 8)),
@@ -254,7 +257,7 @@ namespace CustomTrial
                     string enemyName = enemy.Name.ToLower().Replace(" ", "");
                     if (!_colosseumEnemies.Contains(enemyName) && !_preloadDictionary.ContainsKey(enemyName))
                     {
-                        Log("Enemy " + enemyName + " does not exist in the the preloads dictionary");
+                        Log($"Enemy {enemyName} does not exist in the preloads dictionary.");
                         continue;
                     }
                     if (!_colosseumEnemies.Contains(enemyName) && !preloads.Contains(_preloadDictionary[enemyName]))
@@ -322,9 +325,7 @@ namespace CustomTrial
             }
 
             foreach (KeyValuePair<string, GameObject> pair in gameObjects)
-            {
                 GameObjects[pair.Key] = pair.Value;
-            }
 
             Instance = this;
 
@@ -357,9 +358,7 @@ namespace CustomTrial
                 Crowds.Clear();
                 foreach (GameObject crowd in UObject.FindObjectsOfType<GameObject>()
                     .Where(go => go.name.Contains("Colosseum Crowd NPC")))
-                {
                     Crowds.Add(crowd);
-                }
                 GameObject.Find("Colosseum Manager").AddComponent<ColosseumManager>();
             }
         }
