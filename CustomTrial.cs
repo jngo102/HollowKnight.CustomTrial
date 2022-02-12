@@ -1,7 +1,5 @@
 ﻿using CustomTrial.Classes;
 using Modding;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,7 +29,8 @@ namespace CustomTrial
             ["mawlurk"] = ("Abyss_20", "Mawlek Turret"),
             ["vengefly"] = ("Cliffs_02", "Buzzer"),
             ["crawlid"] = ("Cliffs_02", "Crawler"),
-            ["huskbully"] = ("Cliffs_02", "Zombie Barger"),
+            ["huskbully"] = ("Crossroads_19", "_Enemies/Zombie Barger"),
+            ["huskhornhead"] = ("Crossroads_19", "_Enemies/Zombie Hornhead"),
             ["baldur"] = ("Crossroads_ShamanTemple", "_Enemies/Roller"),
             ["elderbaldur"] = ("Crossroads_ShamanTemple", "Battle Scene/Blocker"),
             ["menderbug"] = ("Crossroads_01", "_Scenery/Mender Bug"),
@@ -41,9 +40,10 @@ namespace CustomTrial
             ["slobberinghusk"] = ("Crossroads_15", "Infected Parent/Spitting Zombie"),
             ["huskwarrior"] = ("Crossroads_15", "_Enemies/Zombie Shield"),
             ["aspidmother"] = ("Crossroads_19", "_Enemies/Hatcher"),
+            ["aspidhatchling"] = ("Crossroads_19", "Hatcher Cage (1)"),
             ["aspidhunter"] = ("Crossroads_19", "_Enemies/Spitter"),
-            ["leapinghusk"] = ("Crossroads_19", "_Enemies/Zombie Leaper"),
-            ["wanderinghusk"] = ("Crossroads_19", "_Enemies/Zombie Runner"),
+            ["leapinghusk"] = ("Crossroads_37", "_Enemies/Zombie Leaper"),
+            ["wanderinghusk"] = ("Crossroads_37", "Zombie Runner (1)"),
             ["huskguard"] = ("Crossroads_21", "non_infected_event/Zombie Guard"),
             ["hopper"] = ("Deepnest_East_06", "Hopper"),
             ["greathopper"] = ("Deepnest_East_06", "Hopper Spawn/Giant Hopper"),
@@ -99,7 +99,7 @@ namespace CustomTrial
             ["entombedhusk"] = ("RestingGrounds_10", "Grave Zombie"),
             ["greathusksentry"] = ("Ruins_House_01", "Battle Scene/Great Shield Zombie"),
             ["gorgeoushusk"] = ("Ruins_House_02", "Gorgeous Husk"),
-            ["howardlyhusk"] = ("Ruins_House_02", "Royal Zombie Coward"),
+            ["cowardlyhusk"] = ("Ruins_House_02", "Royal Zombie Coward"),
             ["gluttonoushusk"] = ("Ruins_House_02", "Royal Zombie Fat"),
             ["huskdandy"] = ("Ruins_House_02", "Royal Zombie 1 (1)"),
             ["folly"] = ("Ruins1_32", "Mage Balloon"),
@@ -176,14 +176,14 @@ namespace CustomTrial
             ["watcherknight"] = ("GG_Watcher_Knights", "Battle Control/Black Knight 1"),
             ["whitedefender"] = ("GG_White_Defender", "White Defender"),
             ["thehollowknight"] = ("Room_Final_Boss_Core", "Boss Control/Hollow Knight Boss"),
-            ["thetadiance"] = ("Dream_Final_Boss", "Boss Control/Radiance"),
+            ["theradiance"] = ("Dream_Final_Boss", "Boss Control/Radiance"),
             ["sibling"] = ("Abyss_15", "Shade Sibling (14)"),
             ["grimmkinnovice"] = ("Mines_10", "Flamebearer Spawn"),
             ["grimmkinmaster"] = ("RestingGrounds_06", "Flamebearer Spawn"),
             ["grimmkinnightmare"] = ("Hive_03", "Flamebearer Spawn"),
         };
 
-        private List<string> _colosseumEnemies = new()
+        private readonly List<string> _colosseumEnemies = new()
         {
             "armoredsquit",
             "battleobble",
@@ -265,29 +265,34 @@ namespace CustomTrial
                         preloads.Add(_preloadDictionary[enemyName]);
                         GameObjects.Add(enemyName, null);
                     }
-                    if (enemyName.Contains("flukemarm") && !GameObjects.ContainsKey("hatchercage"))
+                    if (enemyName == "flukemarm" && !GameObjects.ContainsKey("hatchercage"))
                     {
                         preloads.Add(_preloadDictionary["hatchercage"]);
                         GameObjects.Add("hatchercage", null);
                     }
-                    else if (enemyName.Contains("hornet") && !GameObjects.ContainsKey("needle"))
+                    else if (enemyName == "aspidmother" && !GameObjects.ContainsKey("aspidhatchling"))
+                    {
+                        preloads.Add(_preloadDictionary["aspidhatchling"]);
+                        GameObjects.Add("aspidhatchling", null);
+                    }
+                    else if (enemyName == "hornet" && !GameObjects.ContainsKey("needle"))
                     {
                         //preloads.Add(_preloadDictionary["needle"]);
                         //GameObjects.Add("needle", null);
                     }
-                    else if (enemyName.Contains("uumuu") && !GameObjects.ContainsKey("jellyfishspawner") && !GameObjects.ContainsKey("megajellyfishmultizaps"))
+                    else if (enemyName == "uumuu" && !GameObjects.ContainsKey("jellyfishspawner") && !GameObjects.ContainsKey("megajellyfishmultizaps"))
                     {
                         preloads.Add(_preloadDictionary["jellyfishspawner"]);
                         GameObjects.Add("jellyfishspawner", null);
                         preloads.Add(_preloadDictionary["megajellyfishmultizaps"]);
                         GameObjects.Add("megajellyfishmultizaps", null);
                     }
-                    else if (enemyName.Contains("troupemastergrimm") && !GameObjects.ContainsKey("grimmspikeholder"))
+                    else if (enemyName == "troupemastergrimm" && !GameObjects.ContainsKey("grimmspikeholder"))
                     {
                         preloads.Add(_preloadDictionary["grimmspikeholder"]);
                         GameObjects.Add("grimmspikeholder", null);
                     }
-                    else if (enemyName.Contains("nightmarekinggrimm") && !GameObjects.ContainsKey("nightmaregrimmspikeholder"))
+                    else if (enemyName == "nightmarekinggrimm" && !GameObjects.ContainsKey("nightmaregrimmspikeholder"))
                     {
                         preloads.Add(_preloadDictionary["nightmaregrimmspikeholder"]);
                         GameObjects.Add("nightmaregrimmspikeholder", null);

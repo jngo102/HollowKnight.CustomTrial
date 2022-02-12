@@ -22,13 +22,13 @@ namespace CustomTrial.Classes
         {
             Enemies = new();
             PlatformSpawn = new();
-            CrowdAction = "";
+            CrowdAction = "Cheer";
             MusicLevel = "SILENT";
-            Cooldown = 0.0f;
-            DelayBetweenSpawns = 0.0f;
-            WallCDistance = 0.0f;
-            WallLDistance = 0.0f;
-            WallRDistance = 0.0f;
+            Cooldown = 0;
+            DelayBetweenSpawns = 0;
+            WallCDistance = 0;
+            WallLDistance = 0;
+            WallRDistance = 0;
             Spikes = false;
         }
 

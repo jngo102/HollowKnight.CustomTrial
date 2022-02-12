@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using Modding;
 using UnityEngine;
@@ -22,7 +21,7 @@ namespace CustomTrial.Behaviours
         {
             _dd.SetState("Init");
 
-            foreach (Transform pillarTransform in gameObject.transform.Find("Slam Pillars"))
+            foreach (Transform pillarTransform in transform.Find("Slam Pillars"))
             {
                 GameObject dungPillar = pillarTransform.gameObject;
                 PlayMakerFSM pillarCtrl = dungPillar.LocateMyFSM("Control");
@@ -38,6 +37,10 @@ namespace CustomTrial.Behaviours
             _dd.Fsm.GetFsmFloat("Erupt Y").Value = ArenaInfo.BottomY;
             _dd.Fsm.GetFsmFloat("Max X").Value = ArenaInfo.RightX;
             _dd.Fsm.GetFsmFloat("Min X").Value = ArenaInfo.LeftX;
+
+            GameObject burrowEffect = _dd.Fsm.GetFsmGameObject("Burrow Effect").Value;
+            burrowEffect.transform.position += Vector3.down * 6;
+            burrowEffect.LocateMyFSM("Burrow Effect").Fsm.GetFsmFloat("Ground Y").Value -= 6;
 
             _dd.GetState("Roar?").RemoveAction<SendEventByName>();
             _dd.GetState("Roar?").RemoveAction<SetFsmGameObject>();
@@ -55,7 +58,14 @@ namespace CustomTrial.Behaviours
             _dd.GetAction<SetDamageHeroAmount>("Pillar", 6).damageDealt = 1;
             _dd.GetAction<SetDamageHeroAmount>("Throw 1").damageDealt = 1;
 
-            GetComponent<DamageHero>().damageDealt = 1;
+            _dd.GetAction<SetPosition>("Pillar", 4).y.Value -= 1;
+            _dd.GetAction<SetPosition>("Pillar", 7).y.Value -= 1;
+
+            foreach (var damageHero in GetComponentsInChildren<DamageHero>(true))
+            {
+                damageHero.damageDealt = 1;
+            }
+
             GameObject corpse =
                 ReflectionHelper.GetField<EnemyDeathEffects, GameObject>(GetComponent<EnemyDeathEffectsUninfected>(),
                     "corpse");
@@ -64,6 +74,9 @@ namespace CustomTrial.Behaviours
             yield return new WaitUntil(() => _dd.ActiveStateName == "Sleep");
 
             GetComponent<HealthManager>().IsInvincible = false;
+            var rb = GetComponent<Rigidbody2D>();
+            rb.isKinematic = false;
+            rb.gravityScale = _dd.Fsm.GetFsmFloat("Gravity").Value;
 
             _dd.SetState("After Evade");
             _dd.Fsm.GetFsmInt("Damage").Value = 1;

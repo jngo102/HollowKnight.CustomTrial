@@ -21,7 +21,12 @@ namespace CustomTrial
         {
             string goName = gameObject.name;
 
-            if (goName.Contains("Mantis Flyer Child"))
+            if (goName.Contains("Hatcher"))
+            {
+                var hatcherCage = Instantiate(CustomTrial.GameObjects["aspidhatchling"]);
+                hatcherCage.SetActive(true);
+            }
+            else if (goName.Contains("Mantis Flyer Child"))
             {
                 gameObject.AddComponent<MantisYouth>();
             }
@@ -283,6 +288,10 @@ namespace CustomTrial
             {
                 gameObject.AddComponent<SoulWarrior>();
             }
+            else if (goName.Contains("Slash Spider"))
+            {
+                gameObject.AddComponent<StalkingDevout>();
+            }
             else if (goName.Contains("Mega Jellyfish GG"))
             {
                 gameObject.AddComponent<Uumuu>();
@@ -322,19 +331,7 @@ namespace CustomTrial
             }
             else
             {
-                foreach (FsmState state in _fsm.FsmStates)
-                {
-                    if (state.Name == "Init")
-                    {
-                        _fsm.SetState("Init");
-                        return;
-                    }
-                    if (state.Name == "Initialise")
-                    {
-                        _fsm.SetState("Initialise");
-                        return;
-                    }
-                }
+                _fsm.SetState(_fsm.Fsm.StartState);
             }
         }
     }
