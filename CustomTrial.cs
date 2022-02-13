@@ -19,7 +19,7 @@ namespace CustomTrial
         private static GlobalSettings _globalSettings = new();
         public static GlobalSettings GlobalSettings => _globalSettings;
 
-        public override string GetVersion() => "0.0.0.1";
+        public override string GetVersion() => "1.0.0.1";
 
         private Dictionary<string, (string, string)> _preloadDictionary = new()
         {
