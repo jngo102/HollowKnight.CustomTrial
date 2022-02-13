@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class TheRadiance : MonoBehaviour
+    internal class TheRadiance : MonoBehaviour
     {
         private PlayMakerFSM _commands;
         private PlayMakerFSM _control;

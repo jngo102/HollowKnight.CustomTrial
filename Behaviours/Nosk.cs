@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class Nosk : MonoBehaviour
+    internal class Nosk : MonoBehaviour
     {
         private HealthManager _hm;
         private PlayMakerFSM _constrainX;

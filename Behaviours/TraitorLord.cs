@@ -6,7 +6,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class TraitorLord : MonoBehaviour
+    internal class TraitorLord : MonoBehaviour
     {
         private const float GroundY = 6.0f;
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class Dirtcarver : MonoBehaviour
+    internal class Dirtcarver : MonoBehaviour
     {
         private PlayMakerFSM _centipede;
 

@@ -2,7 +2,7 @@
 
 namespace CustomTrial.Behaviours
 {
-    public class Markoth : MonoBehaviour
+    internal class Markoth : MonoBehaviour
     {
         private PlayMakerFSM _movement;
 

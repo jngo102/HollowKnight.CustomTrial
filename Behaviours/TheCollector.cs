@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class TheCollector : MonoBehaviour
+    internal class TheCollector : MonoBehaviour
     {
         private PlayMakerFSM _control;
         private PlayMakerFSM _death;

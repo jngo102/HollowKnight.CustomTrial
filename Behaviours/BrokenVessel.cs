@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class BrokenVessel : MonoBehaviour
+    internal class BrokenVessel : MonoBehaviour
     {
         private PlayMakerFSM _control;
         private PlayMakerFSM _spawn;

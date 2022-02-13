@@ -2,7 +2,7 @@
 
 namespace CustomTrial.Behaviours
 {
-    public class PrimalAspid : MonoBehaviour
+    internal class PrimalAspid : MonoBehaviour
     {
         private PlayMakerFSM _fsm;
         

@@ -9,7 +9,7 @@ using Vasi;
 
 namespace CustomTrial
 {
-    public class ColosseumManager : MonoBehaviour
+    internal class ColosseumManager : MonoBehaviour
     {
         private List<Vector2> _platPos = new();
         private List<GameObject> _platforms = new();

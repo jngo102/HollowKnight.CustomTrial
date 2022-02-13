@@ -4,7 +4,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class Nailmaster : MonoBehaviour
+    internal class Nailmaster : MonoBehaviour
     {
         private PlayMakerFSM _nailmaster;
 

@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class MossKnight : MonoBehaviour
+    internal class MossKnight : MonoBehaviour
     {
         private PlayMakerFSM _control;
 

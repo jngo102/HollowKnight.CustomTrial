@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CustomTrial
 {
-    public class EnemyTracker : MonoBehaviour
+    internal class EnemyTracker : MonoBehaviour
     {
         private HealthManager _hm;
         private PlayMakerFSM _fsm;

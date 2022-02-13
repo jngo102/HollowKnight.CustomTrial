@@ -4,7 +4,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class Gorb : MonoBehaviour
+    internal class Gorb : MonoBehaviour
     {
         private PlayMakerFSM _movement;
 

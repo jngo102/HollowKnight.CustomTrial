@@ -1,6 +1,6 @@
 ﻿namespace CustomTrial
 {
-    public class ArenaInfo
+    internal class ArenaInfo
     {
         public const float DefaultLeftX = 86.6f;
         public const float DefaultRightX = 118.3f;

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace CustomTrial.Classes
 {
     [Serializable]
-    public class Wave
+    internal class Wave
     {
         public List<Enemy> Enemies;
         public List<Vector2> PlatformSpawn;
@@ -70,7 +70,7 @@ namespace CustomTrial.Classes
     }
 
     [Serializable]
-    public class Enemy
+    internal class Enemy
     {
         public string Name;
         public int Health;

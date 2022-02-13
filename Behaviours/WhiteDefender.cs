@@ -6,7 +6,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class WhiteDefender : MonoBehaviour
+    internal class WhiteDefender : MonoBehaviour
     {
         private PlayMakerFSM _constrainX;
         private PlayMakerFSM _dd;

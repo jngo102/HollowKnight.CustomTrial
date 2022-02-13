@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class Uumuu : MonoBehaviour
+    internal class Uumuu : MonoBehaviour
     {
         private GameObject _jellyfishSpawner;
         private GameObject _multizaps;

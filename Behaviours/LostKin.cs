@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class LostKin : MonoBehaviour
+    internal class LostKin : MonoBehaviour
     {
         private PlayMakerFSM _control;
         private PlayMakerFSM _spawn;

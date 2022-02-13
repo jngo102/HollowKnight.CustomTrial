@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class Folly : MonoBehaviour
+    internal class Folly : MonoBehaviour
     {
         private PlayMakerFSM _control;
 

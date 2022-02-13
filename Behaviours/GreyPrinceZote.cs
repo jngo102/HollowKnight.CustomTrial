@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class GreyPrinceZote : MonoBehaviour
+    internal class GreyPrinceZote : MonoBehaviour
     {
         private PlayMakerFSM _constrainX;
         private PlayMakerFSM _control;

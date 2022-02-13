@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class AspidMother : MonoBehaviour
+    internal class AspidMother : MonoBehaviour
     {
         private GameObject _hatcherCage;
 

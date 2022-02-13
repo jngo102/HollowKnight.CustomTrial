@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class GruzMother : MonoBehaviour
+    internal class GruzMother : MonoBehaviour
     {
         private PlayMakerFSM _control;
         

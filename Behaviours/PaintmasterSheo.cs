@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class PaintmasterSheo : MonoBehaviour
+    internal class PaintmasterSheo : MonoBehaviour
     {
         private PlayMakerFSM _sheo;
 

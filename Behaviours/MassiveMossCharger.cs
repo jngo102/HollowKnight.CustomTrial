@@ -6,7 +6,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class MassiveMossCharger : MonoBehaviour
+    internal class MassiveMossCharger : MonoBehaviour
     {
         private PlayMakerFSM _control;
         

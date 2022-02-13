@@ -9,7 +9,7 @@ using UObject = UnityEngine.Object;
 
 namespace CustomTrial
 {
-    public class CustomTrial : Mod, IGlobalSettings<GlobalSettings>
+    internal class CustomTrial : Mod, IGlobalSettings<GlobalSettings>
     {
         internal static CustomTrial Instance;
 
@@ -155,8 +155,8 @@ namespace CustomTrial
             ["hiveknight"] = ("GG_Hive_Knight", "Battle Scene/Hive Knight"),
             ["purevessel"] = ("GG_Hollow_Knight", "Battle Scene/HK Prime"),
             ["hornetprotector"] = ("GG_Hornet_1", "Boss Holder/Hornet Boss 1"),
-            ["needle"] = ("GG_Hornet_1", "Boss Holder/Needle"),
             ["hornetsentinel"] = ("GG_Hornet_2", "Boss Holder/Hornet Boss 2"),
+            ["barbregion"] = ("GG_Hornet_2", "Barb Region"),
             ["lostkin"] = ("GG_Lost_Kin", "Lost Kin"),
             ["palelurker"] = ("GG_Lurker", "Lurker Control/Pale Lurker"),
             ["soulwarrior"] = ("GG_Mage_Knight", "Mage Knight"),
@@ -295,10 +295,10 @@ namespace CustomTrial
                         preloads.Add(_preloadDictionary["aspidhatchling"]);
                         GameObjects.Add("aspidhatchling", null);
                     }
-                    else if (enemyName == "hornet" && !GameObjects.ContainsKey("needle"))
+                    else if (enemyName == "hornetsentinel" && !GameObjects.ContainsKey("barbregion"))
                     {
-                        //preloads.Add(_preloadDictionary["needle"]);
-                        //GameObjects.Add("needle", null);
+                        preloads.Add(_preloadDictionary["barbregion"]);
+                        GameObjects.Add("barbregion", null);
                     }
                     else if (enemyName == "uumuu" && !GameObjects.ContainsKey("jellyfishspawner") && !GameObjects.ContainsKey("megajellyfishmultizaps"))
                     {

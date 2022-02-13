@@ -4,7 +4,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class MantisLord : MonoBehaviour
+    internal class MantisLord : MonoBehaviour
     {
         private PlayMakerFSM _lord;
 

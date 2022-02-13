@@ -4,7 +4,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class JellyfishSpawner : MonoBehaviour
+    internal class JellyfishSpawner : MonoBehaviour
     {
         private PlayMakerFSM _spawn;
 

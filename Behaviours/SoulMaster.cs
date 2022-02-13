@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class SoulMaster : MonoBehaviour
+    internal class SoulMaster : MonoBehaviour
     {
         private PlayMakerFSM _lord;
 

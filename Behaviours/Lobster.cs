@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class Lobster : MonoBehaviour
+    internal class Lobster : MonoBehaviour
     {
         private PlayMakerFSM _control;
 

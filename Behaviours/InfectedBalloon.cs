@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class InfectedBalloon : MonoBehaviour
+    internal class InfectedBalloon : MonoBehaviour
     {
         private PlayMakerFSM _control;
 

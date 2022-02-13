@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class HiveKnight : MonoBehaviour
+    internal class HiveKnight : MonoBehaviour
     {
         private PlayMakerFSM _control;
 

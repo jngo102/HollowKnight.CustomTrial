@@ -2,7 +2,7 @@
 
 namespace CustomTrial.Behaviours
 {
-    public class Galien : MonoBehaviour
+    internal class Galien : MonoBehaviour
     {
         private PlayMakerFSM _movement;
 

@@ -6,7 +6,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class TroupeMasterGrimm : MonoBehaviour
+    internal class TroupeMasterGrimm : MonoBehaviour
     {
         private GameObject _spikeHolder;
 

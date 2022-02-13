@@ -2,7 +2,7 @@
 
 namespace CustomTrial.Behaviours
 {
-    public class Marmu : MonoBehaviour
+    internal class Marmu : MonoBehaviour
     {
         private PlayMakerFSM _control;
 

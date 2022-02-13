@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace CustomTrial
 {
     [Serializable]
-    public class GlobalSettings
+    internal class GlobalSettings
     {
         private List<Wave> _waves = new();
         private int _geoReward;

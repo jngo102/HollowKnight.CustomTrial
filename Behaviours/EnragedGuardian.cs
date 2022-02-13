@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class EnragedGuardian : MonoBehaviour
+    internal class EnragedGuardian : MonoBehaviour
     {
         private List<GameObject> _turrets = new();
 
@@ -30,8 +30,18 @@ namespace CustomTrial.Behaviours
         {
             _miner.GetAction<FaceObject>("Face Hero 2").objectB = HeroController.instance.gameObject;
 
-            _miner.Fsm.GetFsmFloat("Jump Max X").Value = ArenaInfo.LeftX;
-            _miner.Fsm.GetFsmFloat("Jump Min X").Value = ArenaInfo.RightX;
+            _miner.GetState("Laser Shoot").RemoveAction<SendEventByName>();
+
+            _miner.GetState("Laser Shoot").AddMethod(() =>
+            {
+                foreach (GameObject turrent in _turrets)
+                {
+                    turrent.GetComponent<PlayMakerFSM>().SendEvent("LASER SHOOT");
+                }
+            });
+
+            _miner.Fsm.GetFsmFloat("Jump Max X").Value = ArenaInfo.RightX;
+            _miner.Fsm.GetFsmFloat("Jump Min X").Value = ArenaInfo.LeftX;
 
             _miner.SetState("Init");
         }

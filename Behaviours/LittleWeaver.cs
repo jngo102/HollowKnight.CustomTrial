@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class LittleWeaver : MonoBehaviour
+    internal class LittleWeaver : MonoBehaviour
     {
         private PlayMakerFSM _control;
 

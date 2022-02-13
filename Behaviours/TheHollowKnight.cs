@@ -6,7 +6,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class TheHollowKnight : MonoBehaviour
+    internal class TheHollowKnight : MonoBehaviour
     {
         private PlayMakerFSM _control;
         private PlayMakerFSM _phaseCtrl;

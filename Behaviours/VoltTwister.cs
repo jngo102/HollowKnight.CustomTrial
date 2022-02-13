@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class VoltTwister : MonoBehaviour
+    internal class VoltTwister : MonoBehaviour
     {
         private PlayMakerFSM _mage;
 

@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class MantisWarrior : MonoBehaviour
+    internal class MantisWarrior : MonoBehaviour
     {
         private PlayMakerFSM _mantis;
 

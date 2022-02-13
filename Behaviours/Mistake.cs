@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class Mistake : MonoBehaviour
+    internal class Mistake : MonoBehaviour
     {
         private PlayMakerFSM _blob;
 

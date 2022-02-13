@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class SoulWarrior : MonoBehaviour
+    internal class SoulWarrior : MonoBehaviour
     {
         private PlayMakerFSM _knight;
 

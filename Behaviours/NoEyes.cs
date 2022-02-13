@@ -2,7 +2,7 @@
 
 namespace CustomTrial.Behaviours
 {
-    public class NoEyes : MonoBehaviour
+    internal class NoEyes : MonoBehaviour
     {
         private PlayMakerFSM _movement;
         private PlayMakerFSM _shotSpawn;

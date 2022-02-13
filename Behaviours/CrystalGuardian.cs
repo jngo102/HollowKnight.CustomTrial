@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class CrystalGuardian : MonoBehaviour
+    internal class CrystalGuardian : MonoBehaviour
     {
         private List<GameObject> _turrets = new();
 
@@ -32,8 +32,17 @@ namespace CustomTrial.Behaviours
 
             _miner.GetAction<FaceObject>("Face Hero").objectB = HeroController.instance.gameObject;
 
-            _miner.Fsm.GetFsmFloat("Jump Max X").Value = ArenaInfo.LeftX;
-            _miner.Fsm.GetFsmFloat("Jump Min X").Value = ArenaInfo.RightX;
+            _miner.GetState("Lasers").RemoveAction<SendEventByName>();
+
+            _miner.GetState("Lasers").AddMethod(() => {
+                foreach (GameObject turrent in _turrets)
+                {
+                    turrent.GetComponent<PlayMakerFSM>().SendEvent("LASER SHOOT");
+                }
+            });
+
+            _miner.Fsm.GetFsmFloat("Jump Max X").Value = ArenaInfo.RightX;
+            _miner.Fsm.GetFsmFloat("Jump Min X").Value = ArenaInfo.LeftX;
 
             _miner.SetState("Init");
         }

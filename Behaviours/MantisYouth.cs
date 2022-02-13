@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class MantisYouth : MonoBehaviour
+    internal class MantisYouth : MonoBehaviour
     {
         private PlayMakerFSM _flyer;
 

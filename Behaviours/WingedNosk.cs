@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class WingedNosk : MonoBehaviour
+    internal class WingedNosk : MonoBehaviour
     {
         private GameObject _globDropper;
         private GameObject _roofDust;

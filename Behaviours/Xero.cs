@@ -4,7 +4,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class Xero : MonoBehaviour
+    internal class Xero : MonoBehaviour
     {
         private PlayMakerFSM _movement;
         private PlayMakerFSM _yLimit;

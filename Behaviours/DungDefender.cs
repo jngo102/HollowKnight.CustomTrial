@@ -6,7 +6,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class DungDefender : MonoBehaviour
+    internal class DungDefender : MonoBehaviour
     {
         private PlayMakerFSM _dd;
 

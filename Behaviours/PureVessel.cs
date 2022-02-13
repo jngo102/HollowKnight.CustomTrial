@@ -6,7 +6,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class PureVessel : MonoBehaviour
+    internal class PureVessel : MonoBehaviour
     {
         private const float GroundY = 6.4f;
         

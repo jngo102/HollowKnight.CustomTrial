@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class Lancer : MonoBehaviour
+    internal class Lancer : MonoBehaviour
     {
         private PlayMakerFSM _control;
         private PlayMakerFSM _death;

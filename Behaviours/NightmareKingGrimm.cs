@@ -6,7 +6,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class NightmareKingGrimm : MonoBehaviour
+    internal class NightmareKingGrimm : MonoBehaviour
     {
         private GameObject _spikeHolder;
 

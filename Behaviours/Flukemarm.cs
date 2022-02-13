@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CustomTrial.Behaviours
 {
-    public class Flukemarm : MonoBehaviour
+    internal class Flukemarm : MonoBehaviour
     {
         private PlayMakerFSM _mother;
         

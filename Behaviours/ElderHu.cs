@@ -4,7 +4,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class ElderHu : MonoBehaviour
+    internal class ElderHu : MonoBehaviour
     {
         private PlayMakerFSM _movement;
 

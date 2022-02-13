@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class Oblobble : MonoBehaviour
+    internal class Oblobble : MonoBehaviour
     {
         private PlayMakerFSM _attack;
         private PlayMakerFSM _bounce;

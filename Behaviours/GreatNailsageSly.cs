@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class GreatNailsageSly : MonoBehaviour
+    internal class GreatNailsageSly : MonoBehaviour
     {
         private PlayMakerFSM _control;
         

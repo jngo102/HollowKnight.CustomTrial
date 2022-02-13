@@ -5,7 +5,7 @@ using Vasi;
 
 namespace CustomTrial.Behaviours
 {
-    public class Grimmkin : MonoBehaviour
+    internal class Grimmkin : MonoBehaviour
     {
         public int grimmchildLevel;
 
