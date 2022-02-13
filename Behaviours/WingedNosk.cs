@@ -32,6 +32,9 @@ namespace CustomTrial.Behaviours
 
             yield return new WaitUntil(() => _nosk.ActiveStateName == "Dormant");
 
+            _nosk.Fsm.GetFsmGameObject("Glob Dropper").Value = GameObject.Find("Glob Dropper");
+            _nosk.Fsm.GetFsmGameObject("Roof Dust").Value = GameObject.Find("Roof Dust");
+
             _nosk.SetState("Idle");
         }
     }

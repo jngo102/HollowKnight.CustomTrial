@@ -31,7 +31,7 @@
       <Output TaskParameter="Items" ItemName="FilesWithHashes" />
     </GetFileHash>
     <WriteLinesToFile File="$(ExportDir)/$(TargetName)/SHA.txt" Lines="@(FilesWithHashes->'%(FileHash)')" Overwrite="true" Encoding="UTF-8" />
-      <Exec Command="steam steam://rungameid/367520" />
+    <Exec Command="steam steam://rungameid/367520" />
   </Target>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <!-- Uncomment this to enabled strong name key signing for releases -->

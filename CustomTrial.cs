@@ -23,6 +23,7 @@ namespace CustomTrial
 
         private Dictionary<string, (string, string)> _preloadDictionary = new()
         {
+            #region Enemies
             ["shadowcreeper"] = ("Abyss_20", "Abyss Crawler"),
             ["infectedballoon"] = ("Abyss_20", "Parasite Balloon (6)"),
             ["maggot"] = ("Crossroads_10_boss_defeated", "Prayer Room/Prayer Slug"),
@@ -124,7 +125,9 @@ namespace CustomTrial
             ["zoteturret"] = ("GG_Mighty_Zote", "Battle Control/Extra Zotes/Zote Turret"),
             ["zotefluke"] = ("GG_Mighty_Zote", "Battle Control/Zote Fluke"),
             ["zotethwomp"] = ("GG_Mighty_Zote", "Battle Control/Zote Thwomp"),
+            #endregion
 
+            #region Bosses
             ["brokenvessel"] = ("GG_Broken_Vessel", "Infected Knight"),
             ["broodingmawlek"] = ("GG_Brooding_Mawlek", "Battle Scene/Mawlek Body"),
             ["thecollector"] = ("GG_Collector_V", "Battle Scene/Jar Collector"),
@@ -161,6 +164,8 @@ namespace CustomTrial
             ["oro"] = ("GG_Nailmasters", "Brothers/Oro"),
             ["nosk"] = ("GG_Nosk", "Mimic Spider"),
             ["wingednosk"] = ("GG_Nosk_Hornet", "Battle Scene/Hornet Nosk"),
+            ["globdropper"] = ("GG_Nosk_Hornet", "Battle Scene/Glob Dropper"),
+            ["roofdust"] = ("GG_Nosk_Hornet", "Battle Scene/Roof Dust"),
             ["oblobble"] = ("GG_Oblobbles", "Mega Fat Bee"),
             ["paintmastersheo"] = ("GG_Painter", "Battle Scene/Sheo Boss"),
             ["absoluteradiance"] = ("GG_Radiance", "Boss Control/Absolute Radiance"),
@@ -181,6 +186,7 @@ namespace CustomTrial
             ["grimmkinnovice"] = ("Mines_10", "Flamebearer Spawn"),
             ["grimmkinmaster"] = ("RestingGrounds_06", "Flamebearer Spawn"),
             ["grimmkinnightmare"] = ("Hive_03", "Flamebearer Spawn"),
+            #endregion
         };
 
         private readonly List<string> _colosseumEnemies = new()
@@ -296,6 +302,14 @@ namespace CustomTrial
                     {
                         preloads.Add(_preloadDictionary["nightmaregrimmspikeholder"]);
                         GameObjects.Add("nightmaregrimmspikeholder", null);
+                    }
+                    else if (enemyName == "wingednosk" && !GameObjects.ContainsKey("globdropper") && !GameObjects.ContainsKey("roofdust"))
+                    {
+                        preloads.Add(_preloadDictionary["globdropper"]);
+                        GameObjects.Add("globdropper", null);
+
+                        preloads.Add(_preloadDictionary["roofdust"]);
+                        GameObjects.Add("roofdust", null);
                     }
                 }
             }

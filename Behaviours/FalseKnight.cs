@@ -39,10 +39,11 @@ namespace CustomTrial.Behaviours
 
         private IEnumerator TweenOut()
         {
+            GetComponent<BoxCollider2D>().isTrigger = true;
             yield return new WaitUntil(() =>
             {
-                transform.Translate(Vector3.down * 5);
-                return transform.position.y <= ArenaInfo.BottomY - 5;
+                transform.Translate(Vector3.down * 25 * Time.deltaTime);
+                return transform.position.y <= ArenaInfo.BottomY - 10;
             });
             ColosseumManager.EnemyCount--;
             Destroy(gameObject);

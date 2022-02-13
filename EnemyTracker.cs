@@ -62,7 +62,8 @@ namespace CustomTrial
             {
                 gameObject.AddComponent<InfectedBalloon>();
             }
-            else if (goName.Contains("Mage") && !goName.Contains("Knight") && !goName.Contains("Lord") && !goName.Contains("Electric"))
+            else if (goName.Contains("Mage") && !goName.Contains("Knight") && !goName.Contains("Lord") &&
+                     !goName.Contains("Electric"))
             {
                 gameObject.AddComponent<SoulTwister>();
             }
@@ -192,7 +193,8 @@ namespace CustomTrial
             }
             else if (goName.Contains("Grimm Boss") && !goName.Contains("Nightmare"))
             {
-                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["grimmspikeholder"], new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
+                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["grimmspikeholder"],
+                    new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
                 spikeHolder.SetActive(true);
                 gameObject.AddComponent<TroupeMasterGrimm>();
             }
@@ -252,7 +254,8 @@ namespace CustomTrial
             }
             else if (goName.Contains("Nightmare Grimm Boss"))
             {
-                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["nightmaregrimmspikeholder"], new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
+                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["nightmaregrimmspikeholder"],
+                    new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
                 spikeHolder.SetActive(true);
                 gameObject.AddComponent<NightmareKingGrimm>();
             }
@@ -262,6 +265,22 @@ namespace CustomTrial
             }
             else if (goName.Contains("Hornet Nosk"))
             {
+                GameObject globDropper = Instantiate(CustomTrial.GameObjects["globdropper"]);
+                globDropper.name = globDropper.name.Replace("(Clone)", "");
+                globDropper.SetActive(true);
+                for (int globIndex = 1; globIndex < 9; globIndex++)
+                {
+                    if (globIndex == 7) continue;
+                    globDropper.transform.Find($"G{globIndex}").SetPosition2D(
+                        ArenaInfo.LeftX + globIndex * (ArenaInfo.RightX - ArenaInfo.LeftX) / 9,
+                        ArenaInfo.TopY - 1.5f
+                    );
+                }
+
+                var roofDust = Instantiate(CustomTrial.GameObjects["roofdust"]);
+                roofDust.transform.SetPosition2D(ArenaInfo.CenterX, ArenaInfo.TopY);
+                roofDust.name = roofDust.name.Replace("(Clone)", "");
+
                 gameObject.AddComponent<WingedNosk>();
             }
             else if (goName.Contains("Mega Fat Bee"))
