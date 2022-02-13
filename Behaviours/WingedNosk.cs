@@ -7,11 +7,30 @@ namespace CustomTrial.Behaviours
 {
     public class WingedNosk : MonoBehaviour
     {
+        private GameObject _globDropper;
+        private GameObject _roofDust;
+
         private PlayMakerFSM _nosk;
 
         private void Awake()
         {
             _nosk = gameObject.LocateMyFSM("Hornet Nosk");
+
+            _globDropper = Instantiate(CustomTrial.GameObjects["globdropper"]);
+            _globDropper.SetActive(true);
+            for (int globIndex = 1; globIndex < 9; globIndex++)
+            {
+                if (globIndex == 7) continue;
+                _globDropper.transform.Find($"G{globIndex}").SetPosition2D(
+                    ArenaInfo.LeftX + globIndex * (ArenaInfo.RightX - ArenaInfo.LeftX) / 9,
+                    ArenaInfo.TopY - 1.5f
+                );
+            }
+
+            _roofDust = Instantiate(CustomTrial.GameObjects["roofdust"]);
+            _roofDust.transform.SetPosition2D(ArenaInfo.CenterX, ArenaInfo.TopY);
+
+            GetComponent<HealthManager>().OnDeath += OnDeath;
         }
 
         private IEnumerator Start()
@@ -32,10 +51,16 @@ namespace CustomTrial.Behaviours
 
             yield return new WaitUntil(() => _nosk.ActiveStateName == "Dormant");
 
-            _nosk.Fsm.GetFsmGameObject("Glob Dropper").Value = GameObject.Find("Glob Dropper");
-            _nosk.Fsm.GetFsmGameObject("Roof Dust").Value = GameObject.Find("Roof Dust");
+            _nosk.Fsm.GetFsmGameObject("Glob Dropper").Value = _globDropper;
+            _nosk.Fsm.GetFsmGameObject("Roof Dust").Value = _roofDust;
 
             _nosk.SetState("Idle");
+        }
+
+        private void OnDeath()
+        {
+            Destroy(_globDropper);
+            Destroy(_roofDust);
         }
     }
 }

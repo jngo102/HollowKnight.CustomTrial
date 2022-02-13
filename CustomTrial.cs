@@ -132,7 +132,9 @@ namespace CustomTrial
             ["broodingmawlek"] = ("GG_Brooding_Mawlek", "Battle Scene/Mawlek Body"),
             ["thecollector"] = ("GG_Collector_V", "Battle Scene/Jar Collector"),
             ["crystalguardian"] = ("GG_Crystal_Guardian", "Mega Zombie Beam Miner (1)"),
+            ["turretcg1"] = ("GG_Crystal_Guardian", "Laser Turret Mega (1)"),
             ["enragedguardian"] = ("GG_Crystal_Guardian_2", "Battle Scene/Zombie Beam Miner Rematch"),
+            ["turretcg2"] = ("GG_Crystal_Guardian_2", "Laser Turret Mega"),
             ["dungdefender"] = ("GG_Dung_Defender", "Dung Defender"),
             ["failedchampion"] = ("GG_Failed_Champion", "False Knight Dream"),
             ["falseknight"] = ("GG_False_Knight", "Battle Scene/False Knight New"),
@@ -266,12 +268,24 @@ namespace CustomTrial
                         Log($"Enemy {enemyName} does not exist in the preloads dictionary.");
                         continue;
                     }
+                    
                     if (!_colosseumEnemies.Contains(enemyName) && !preloads.Contains(_preloadDictionary[enemyName]))
                     {
                         preloads.Add(_preloadDictionary[enemyName]);
                         GameObjects.Add(enemyName, null);
                     }
-                    if (enemyName == "flukemarm" && !GameObjects.ContainsKey("hatchercage"))
+
+                    if (enemyName == "crystalguardian" && !GameObjects.ContainsKey("turretcg1"))
+                    {
+                        preloads.Add(_preloadDictionary["turretcg1"]);
+                        GameObjects.Add("turretcg1", null);
+                    }
+                    else if (enemyName == "enragedguardian" && !GameObjects.ContainsKey("turretcg2"))
+                    {
+                        preloads.Add(_preloadDictionary["turretcg2"]);
+                        GameObjects.Add("turretcg2", null);
+                    }
+                    else if (enemyName == "flukemarm" && !GameObjects.ContainsKey("hatchercage"))
                     {
                         preloads.Add(_preloadDictionary["hatchercage"]);
                         GameObjects.Add("hatchercage", null);

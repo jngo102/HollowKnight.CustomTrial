@@ -23,8 +23,7 @@ namespace CustomTrial
 
             if (goName.Contains("Hatcher"))
             {
-                var hatcherCage = Instantiate(CustomTrial.GameObjects["aspidhatchling"]);
-                hatcherCage.SetActive(true);
+                gameObject.AddComponent<AspidMother>();
             }
             else if (goName.Contains("Mantis Flyer Child"))
             {
@@ -193,9 +192,6 @@ namespace CustomTrial
             }
             else if (goName.Contains("Grimm Boss") && !goName.Contains("Nightmare"))
             {
-                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["grimmspikeholder"],
-                    new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
-                spikeHolder.SetActive(true);
                 gameObject.AddComponent<TroupeMasterGrimm>();
             }
             else if (goName.Contains("Lancer"))
@@ -224,12 +220,10 @@ namespace CustomTrial
             }
             else if (goName.Contains("Hornet Boss 1"))
             {
-                //Instantiate(CustomTrial.GameObjects["needle"], gameObject.transform);
                 gameObject.AddComponent<HornetProtector>();
             }
             else if (goName.Contains("Hornet Boss 2"))
             {
-                //Instantiate(CustomTrial.GameObjects["needle"], gameObject.transform);
                 gameObject.AddComponent<HornetSentinel>();
             }
             else if (goName.Contains("Lost Kin"))
@@ -254,9 +248,6 @@ namespace CustomTrial
             }
             else if (goName.Contains("Nightmare Grimm Boss"))
             {
-                GameObject spikeHolder = Instantiate(CustomTrial.GameObjects["nightmaregrimmspikeholder"],
-                    new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
-                spikeHolder.SetActive(true);
                 gameObject.AddComponent<NightmareKingGrimm>();
             }
             else if (goName.Contains("Mimic Spider"))
@@ -265,22 +256,6 @@ namespace CustomTrial
             }
             else if (goName.Contains("Hornet Nosk"))
             {
-                GameObject globDropper = Instantiate(CustomTrial.GameObjects["globdropper"]);
-                globDropper.name = globDropper.name.Replace("(Clone)", "");
-                globDropper.SetActive(true);
-                for (int globIndex = 1; globIndex < 9; globIndex++)
-                {
-                    if (globIndex == 7) continue;
-                    globDropper.transform.Find($"G{globIndex}").SetPosition2D(
-                        ArenaInfo.LeftX + globIndex * (ArenaInfo.RightX - ArenaInfo.LeftX) / 9,
-                        ArenaInfo.TopY - 1.5f
-                    );
-                }
-
-                var roofDust = Instantiate(CustomTrial.GameObjects["roofdust"]);
-                roofDust.transform.SetPosition2D(ArenaInfo.CenterX, ArenaInfo.TopY);
-                roofDust.name = roofDust.name.Replace("(Clone)", "");
-
                 gameObject.AddComponent<WingedNosk>();
             }
             else if (goName.Contains("Mega Fat Bee"))
@@ -314,11 +289,6 @@ namespace CustomTrial
             else if (goName.Contains("Mega Jellyfish GG"))
             {
                 gameObject.AddComponent<Uumuu>();
-                GameObject jellyfishSpawner = Instantiate(CustomTrial.GameObjects["jellyfishspawner"], new Vector2(ArenaInfo.CenterX, ArenaInfo.CenterY), Quaternion.identity);
-                jellyfishSpawner.SetActive(true);
-                jellyfishSpawner.AddComponent<JellyfishSpawner>();
-                GameObject multizaps = Instantiate(CustomTrial.GameObjects["megajellyfishmultizaps"], new Vector2(ArenaInfo.CenterX, ArenaInfo.CenterY), Quaternion.identity);
-                multizaps.SetActive(true);
             }
             else if (goName.Contains("Black Knight"))
             {

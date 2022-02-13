@@ -8,6 +8,8 @@ namespace CustomTrial.Behaviours
 {
     public class NightmareKingGrimm : MonoBehaviour
     {
+        private GameObject _spikeHolder;
+
         private PlayMakerFSM _constrainX;
         private PlayMakerFSM _constrainY;
         private PlayMakerFSM _control;
@@ -17,6 +19,10 @@ namespace CustomTrial.Behaviours
             _constrainX = gameObject.LocateMyFSM("constrain_x");
             _constrainY = gameObject.LocateMyFSM("Constrain Y");
             _control = gameObject.LocateMyFSM("Control");
+
+            _spikeHolder = Instantiate(CustomTrial.GameObjects["nightmaregrimmspikeholder"],
+                    new Vector2(ArenaInfo.CenterX, ArenaInfo.BottomY - 3), Quaternion.identity);
+            _spikeHolder.SetActive(true);
         }
 
         private IEnumerator Start()
@@ -42,7 +48,7 @@ namespace CustomTrial.Behaviours
 
             _control.GetState("Death Start").InsertMethod(0, () =>
             {
-                Destroy(FindObjectsOfType<GameObject>().First(go => go.name.Contains("Grimm Spike Holder")));
+                Destroy(_spikeHolder);
                 ColosseumManager.EnemyCount--;
             });
 

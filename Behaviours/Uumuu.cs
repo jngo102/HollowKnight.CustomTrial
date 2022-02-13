@@ -6,6 +6,9 @@ namespace CustomTrial.Behaviours
 {
     public class Uumuu : MonoBehaviour
     {
+        private GameObject _jellyfishSpawner;
+        private GameObject _multizaps;
+
         private PlayMakerFSM _bounds;
         private PlayMakerFSM _jellyfish;
 
@@ -13,6 +16,14 @@ namespace CustomTrial.Behaviours
         {
             _bounds = gameObject.LocateMyFSM("Bounds");
             _jellyfish = gameObject.LocateMyFSM("Mega Jellyfish");
+
+            _jellyfishSpawner = Instantiate(CustomTrial.GameObjects["jellyfishspawner"], new Vector2(ArenaInfo.CenterX, ArenaInfo.CenterY), Quaternion.identity);
+            _jellyfishSpawner.SetActive(true);
+            _jellyfishSpawner.AddComponent<JellyfishSpawner>();
+            _multizaps = Instantiate(CustomTrial.GameObjects["megajellyfishmultizaps"], new Vector2(ArenaInfo.CenterX, ArenaInfo.CenterY), Quaternion.identity);
+            _multizaps.SetActive(true);
+
+            GetComponent<HealthManager>().OnDeath += OnDeath;
         }
 
         private IEnumerator Start()
@@ -35,6 +46,12 @@ namespace CustomTrial.Behaviours
             yield return new WaitUntil(() => _jellyfish.ActiveStateName == "Sleep");
             
             _jellyfish.SetState("Start");
+        }
+
+        private void OnDeath()
+        {
+            Destroy(_jellyfishSpawner);
+            Destroy(_multizaps);
         }
     }
 }
