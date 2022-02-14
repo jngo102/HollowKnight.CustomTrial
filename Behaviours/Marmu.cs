@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using HutongGames.PlayMaker.Actions;
+using Modding;
+using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -9,6 +12,8 @@ namespace CustomTrial.Behaviours
         private void Awake()
         {
             _control = gameObject.LocateMyFSM("Control");
+
+            ReflectionHelper.GetField<EnemyDeathEffects, GameObject>(GetComponent<EnemyDeathEffectsNoEffect>(), "corpse").LocateMyFSM("Control").GetState("End").RemoveAction<CreateObject>();
         }
 
         private void Start()

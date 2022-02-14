@@ -140,8 +140,10 @@ namespace CustomTrial
             ["falseknight"] = ("GG_False_Knight", "Battle Scene/False Knight New"),
             ["flukemarm"] = ("GG_Flukemarm", "Fluke Mother"),
             ["galien"] = ("GG_Ghost_Galien", "Warrior/Ghost Warrior Galien"),
+            ["hammer"] = ("GG_Ghost_Galien", "Warrior/Galien Hammer"),
             ["gorb"] = ("Cliffs_02_boss", "Warrior/Ghost Warrior Slug"),
             ["elderhu"] = ("GG_Ghost_Hu", "Warrior/Ghost Warrior Hu"),
+            ["ringholder"] = ("GG_Ghost_Hu", "Ring Holder"),
             ["markoth"] = ("GG_Ghost_Markoth", "Warrior/Ghost Warrior Markoth"),
             ["marmu"] = ("GG_Ghost_Marmu", "Warrior/Ghost Warrior Marmu"),
             ["noeyes"] = ("GG_Ghost_No_Eyes", "Warrior/Ghost Warrior No Eyes"),
@@ -280,6 +282,11 @@ namespace CustomTrial
                         preloads.Add(_preloadDictionary["turretcg1"]);
                         GameObjects.Add("turretcg1", null);
                     }
+                    else if (enemyName == "elderhu" && !GameObjects.ContainsKey("ringholder"))
+                    {
+                        preloads.Add(_preloadDictionary["ringholder"]);
+                        GameObjects.Add("ringholder", null);
+                    }
                     else if (enemyName == "enragedguardian" && !GameObjects.ContainsKey("turretcg2"))
                     {
                         preloads.Add(_preloadDictionary["turretcg2"]);
@@ -289,6 +296,11 @@ namespace CustomTrial
                     {
                         preloads.Add(_preloadDictionary["hatchercage"]);
                         GameObjects.Add("hatchercage", null);
+                    }
+                    else if (enemyName == "galien" && !GameObjects.ContainsKey("hammer"))
+                    {
+                        preloads.Add(_preloadDictionary["hammer"]);
+                        GameObjects.Add("hammer", null);
                     }
                     else if (enemyName == "aspidmother" && !GameObjects.ContainsKey("aspidhatchling"))
                     {
