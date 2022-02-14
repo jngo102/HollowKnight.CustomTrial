@@ -27,15 +27,9 @@ namespace CustomTrial.Behaviours
             _control.GetAction<SetFloatValue>("Jump To R", 0).floatValue.Value = ArenaInfo.LeftX + 8;
             _control.GetAction<SetFloatValue>("Jump To R", 1).floatValue.Value = ArenaInfo.RightX;
             
-            _control.GetState("Bow").InsertMethod(0, () => Destroy(gameObject, 3));
+            _control.GetState("Bow").AddCoroutine(TweenOut);
             _control.GetState("Stun Wait").AddMethod(() => _control.SendEvent("READY"));
             _control.GetState("Grabbing").AddMethod(() => _control.SendEvent("GRABBED"));
-            
-            _control.GetState("Cyclone Start").RemoveAction<SetPolygonCollider>();
-            _control.GetState("Cyclone Start").RemoveAction(8);
-            _control.GetState("Cyclone End").RemoveAction<SetPolygonCollider>();
-            _control.GetState("Stun Reset").RemoveAction<SetPolygonCollider>();
-            _control.GetState("Death Reset").RemoveAction<SetPolygonCollider>();
             
             yield return new WaitWhile(() => _control.ActiveStateName != "Docile");
 
@@ -50,9 +44,18 @@ namespace CustomTrial.Behaviours
             _control.SetState("Battle Start");
         }
 
-        private void Update()
+        private IEnumerator TweenOut()
         {
-            Modding.Logger.Log("[Sly] " + _control.ActiveStateName);
+            yield return new WaitForSeconds(5);
+
+            GetComponent<BoxCollider2D>().isTrigger = true;
+            yield return new WaitUntil(() =>
+            {
+                transform.Translate(Vector3.down * 25 * Time.deltaTime);
+                return transform.position.y <= ArenaInfo.BottomY - 10;
+            });
+            ColosseumManager.EnemyCount--;
+            Destroy(gameObject);
         }
     }
 }

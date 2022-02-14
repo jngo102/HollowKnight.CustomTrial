@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using Modding;
+using System.Collections;
 using UnityEngine;
+using Vasi;
 
 namespace CustomTrial.Behaviours
 {
@@ -11,7 +13,8 @@ namespace CustomTrial.Behaviours
         {
             _sheo = gameObject.LocateMyFSM("nailmaster_sheo");
 
-            GetComponent<HealthManager>().OnDeath += OnDeath;
+            var corpse = ReflectionHelper.GetField<EnemyDeathEffects, GameObject>(GetComponent<EnemyDeathEffectsUninfected>(), "corpse");
+            corpse.AddComponent<SheoCorpse>();
         }
 
         private IEnumerator Start()
@@ -22,10 +25,27 @@ namespace CustomTrial.Behaviours
 
             _sheo.SetState("Battle Start");
         }
+    }
 
-        private void OnDeath()
+    internal class SheoCorpse : MonoBehaviour
+    {
+        private void Awake()
         {
-            Destroy(gameObject, 8);
+            gameObject.LocateMyFSM("Control").GetState("Bow").AddCoroutine(TweenOut);
+        }
+
+        private IEnumerator TweenOut()
+        {
+            yield return new WaitForSeconds(5);
+
+            GetComponent<BoxCollider2D>().isTrigger = true;
+            yield return new WaitUntil(() =>
+            {
+                transform.Translate(Vector3.down * 25 * Time.deltaTime);
+                return transform.position.y <= ArenaInfo.BottomY - 10;
+            });
+
+            Destroy(gameObject);
         }
     }
 }
