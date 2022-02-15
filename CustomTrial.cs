@@ -153,6 +153,8 @@ namespace CustomTrial
             ["grimmspikeholder"] = ("GG_Grimm", "Grimm Spike Holder"),
             ["nightmarekinggrimm"] = ("GG_Grimm_Nightmare", "Grimm Control/Nightmare Grimm Boss"),
             ["nightmaregrimmspikeholder"] = ("GG_Grimm_Nightmare", "Grimm Spike Holder"),
+            ["grimmbats"] = ("GG_Grimm", "Grimm Bats"),
+            ["nightmaregrimmbats"] = ("GG_Grimm_Nightmare", "Grimm Control/Grimm Bats"),
             ["gruzmother"] = ("GG_Gruz_Mother", "_Enemies/Giant Fly"),
             ["hiveknight"] = ("GG_Hive_Knight", "Battle Scene/Hive Knight"),
             ["purevessel"] = ("GG_Hollow_Knight", "Battle Scene/HK Prime"),
@@ -319,15 +321,19 @@ namespace CustomTrial
                         preloads.Add(_preloadDictionary["megajellyfishmultizaps"]);
                         GameObjects.Add("megajellyfishmultizaps", null);
                     }
-                    else if (enemyName == "troupemastergrimm" && !GameObjects.ContainsKey("grimmspikeholder"))
+                    else if (enemyName == "troupemastergrimm" && !GameObjects.ContainsKey("grimmspikeholder") && !GameObjects.ContainsKey("grimmbats"))
                     {
                         preloads.Add(_preloadDictionary["grimmspikeholder"]);
                         GameObjects.Add("grimmspikeholder", null);
+                        preloads.Add(_preloadDictionary["grimmbats"]);
+                        GameObjects.Add("grimmbats", null);
                     }
-                    else if (enemyName == "nightmarekinggrimm" && !GameObjects.ContainsKey("nightmaregrimmspikeholder"))
+                    else if (enemyName == "nightmarekinggrimm" && !GameObjects.ContainsKey("nightmaregrimmspikeholder") && !GameObjects.ContainsKey("nightmaregrimmbats"))
                     {
                         preloads.Add(_preloadDictionary["nightmaregrimmspikeholder"]);
                         GameObjects.Add("nightmaregrimmspikeholder", null);
+                        preloads.Add(_preloadDictionary["nightmaregrimmbats"]);
+                        GameObjects.Add("nightmaregrimmbats", null);
                     }
                     else if (enemyName == "wingednosk" && !GameObjects.ContainsKey("globdropper") && !GameObjects.ContainsKey("roofdust"))
                     {
